@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance Buddy</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #222; line-height: 1.6; }
+    h1 { font-size: 1.6em; }
+    h2 { font-size: 1.2em; margin-top: 1.5em; }
+    h3 { font-size: 1em; margin-top: 1.2em; }
+    ul { margin: 0.5em 0 0.5em 1.5em; }
+    ol { margin: 0.5em 0 0.5em 1.5em; }
+    li { margin-bottom: 0.3em; }
+    table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    code { font-family: monospace; }
+  </style>
+</head>
+<body>
+
+  <h1><code>Maintenance Buddy</code></h1>
+  <p>Ashton Hull, Jordan Glatz, Daniel Vincent</p>
+
+  <h2>1: Introduction</h2>
+
+  <h3>1.1 Purpose</h3>
+  <p>The purpose of this document is to define an outline for Maintenance Buddy. It will focus on defining the vision of this project as well as constraints, such as time and resources. This outline will be a reference for all involved such as stakeholders, developers, and users because a clear problem will be acknowledged and solved.</p>
+  <p>Maintenance Buddy is a tool in the form of a mobile app that helps keep a complete maintenance log for your vehicle in one easy to access place. Users have the ability to input a multitude of information such as services performed, mileage, dates, receipts, photos, and notes. By doing this a log is created where information on your car can be easily organized. Furthermore, manufacturers provide recommended maintenance schedules based on vehicle make, model, and year, which can be used to keep users accountable. Maintenance Buddy will be a tool that will consistently help in caring for and maintaining your vehicle.</p>
+
+  <h3>1.2 Scope</h3>
+  <p>Maintenance Buddy will be a mobile application that:</p>
+  <ul>
+    <li>Focuses on ease of use and organization for individuals</li>
+    <li>Creates a maintenance log for users to view</li>
+    <li>Helps users to know when maintenance is required</li>
+    <li>Allows users to record changes with their vehicle</li>
+  </ul>
+
+  <h2>2: Positioning</h2>
+
+  <h3>2.1 Business opportunity</h3>
+  <p>Today, most people own a car but maintenance tracking is often a forgotten part about ownership. Without proper documentation it can make it hard to properly know what needs work or when something was changed. This creates a perfect opportunity for an easy to use app utilizing a user-friendly interface to track and store this data. This app will replace relying on one's memory or trying to utilize basic note taking.</p>
+
+  <h3>2.2 Problem statement</h3>
+  <p>Keeping track of personal vehicle records can be hard without proper organization. Receipts get misplaced, invoices scattered, and it can be hard to remember everything that has been done to the car. This can make problems arise when trying to sell the car, negotiating repairs, handling warranty issues, and disputing questionable work.</p>
+
+  <h2>3: Stakeholder and user descriptions</h2>
+
+  <h3>3.2 Stakeholder Summary</h3>
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Skills</th><th>Role</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Ashton Hull</td><td>Java, SQL, Javascript</td><td>Backend development, Database management, GUI</td></tr>
+      <tr><td>Daniel Vincent</td><td>Java, SQL</td><td>GUI &amp; Frontend Development</td></tr>
+      <tr><td>Jordan Glatz</td><td>Java</td><td>Frontend development &amp; Backend development</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 User Summary</h3>
+  <p>Users of Maintenance Buddy include:</p>
+  <ul>
+    <li>Individual car owners</li>
+    <li>Used car sellers</li>
+    <li>Owners of multiple cars</li>
+  </ul>
+
+  <h2>4: Product overview</h2>
+
+  <h3>4.1 Product perspective</h3>
+  <p>Common Car maintenance logs have tools included like CARFAX, FIXD, Google Sheets/Microsoft Excel, physical notebooks, and templates used by subscription based fees. Maintenance Buddy is an app where you can store your car's data, maintenance history, and future vehicle services and issues which need attention. The product is built around consistency and reliability. Users are assisted in scheduling maintenance and are reminded to upload information at the point of service and care. The software automatically creates a clear maintenance schedule that demonstrates responsible car ownership by asking users to enter accurate information each time and safely logging notes, images, and receipts.</p>
+
+  <h3>4.2 Summary of capabilities</h3>
+  <p>Maintenance logging, Reminder Scheduling, Vehicle profile management, Document Storage, History visualization, Search and Filtering, Exportable Reports, Multi-Vehicle Support.</p>
+
+  <h3>4.3 Assumptions and dependencies</h3>
+
+  <h4>App Dependencies</h4>
+  <ul>
+    <li>Users have internet access</li>
+    <li>Users Manually enter accurate Data</li>
+    <li>Manufacturer maintenance data is available</li>
+    <li>Users have Up-to-Date Software to use application</li>
+    <li>Users have correct documentation</li>
+    <li>Users have Access to device features such as camera and file storage for uploading</li>
+  </ul>
+
+  <h4>Backend and Infrastructure Dependencies</h4>
+  <ul>
+    <li>A backend server or cloud service to store user data securely</li>
+    <li>Database system to manage vehicle profiles, records, and documents</li>
+    <li>Cloud storage service for handling receipt uploads</li>
+  </ul>
+
+  <h4>Data Dependencies</h4>
+  <ul>
+    <li>Manufacturer maintenance schedules based on vehicle make, model, and year</li>
+    <li>Accurate user input for mileage, dates, and services performed on the vehicle.</li>
+    <li>Maintenance categories to ensure consistent logging and reporting.</li>
+  </ul>
+
+  <h4>Notification Dependencies</h4>
+  <ul>
+    <li>Push notification services for maintenance reminders</li>
+    <li>Background task scheduling supported by the M.O.S (Mobile Operating System)</li>
+    <li>User permissions for Notifications and reminders.</li>
+  </ul>
+
+  <h2>5: Product features</h2>
+  <ol>
+    <li>Users can enter their year, make, and model to search for an OEM maintenance schedule. Schedules for many of the most common models will be created manually by us.</li>
+    <li>Users can create a maintenance schedule for a specific year, make, and model if one does not exist already. Schedules for all other models will be community-driven. For community members to create a schedule, they must have access to the manual and be able to list it as a reference. This is so that other users can ensure the schedule's validity. Note: manuals are copyrighted content, and direct access to the manual within the app is not legal.</li>
+    <li>The app can send reminders to schedule maintenance appointments by comparing the OEM schedule and the time/mileage since last service.</li>
+    <li>Upon receiving a scheduling reminder, users may create appointment entries. Appointment entries do not allow you to schedule appointments within the app. Instead, they are meant to be done after the user has already scheduled the appointment externally. Appointment entries must contain a date and time for a follow-up. They may optionally contain information like "Service being performed", "Company Title", etc.</li>
+    <li>When creating an appointment entry, users may quickly add information by having the app parse a screenshot of the "appointment confirmation details".</li>
+    <li>When the time for a follow-up comes, the app will send a reminder letting the user know that it is time to document the service.</li>
+    <li>Users may view their vehicle's maintenance history on a timeline and expand a "service event" to view the full details.</li>
+    <li>While viewing the maintenance history, appointment entries will show up on the timeline. Upon completion of the follow-up they will become a service event.</li>
+    <li>If users do not want to use the appointment entry and appointment reminder features, they may opt to manually create the service event instead. Users will select the date the service occurred.</li>
+    <li>When creating a service event manually, users may select options including but not limited to: 1) "I did this service myself" 2) "Cosmetic modification", 3) "Performance modification"</li>
+    <li>Users may export complete maintenance history. This may come in two forms:
+      <ol>
+        <li><strong>"Maintenance Summary" (PDF/DOCX)</strong>: Condensed version of the vehicle history, includes mostly text, maybe 1 photo per service.</li>
+        <li><strong>"Full Report" (ZIP Archive)</strong>: Package containing full, unmodified vehicle history. Inherently a file structure like:<br>
+          "2010 Honda Accord History" → "01-01-26 Oil Change" → before.jpg, after.jpg, invoice.jpg, MechanicComments.txt</li>
+      </ol>
+    </li>
+  </ol>
+
+  <h2>6: Constraints</h2>
+  <ul>
+    <li><strong>Time Constraints</strong>: Limited development time within the semester can lead to problems with not having enough time to fully design and test the software and may lead to restricted features.</li>
+    <li><strong>Scope Risk</strong>: Too many planned features can make a project large and completed within the time limit will become a bigger issue.</li>
+    <li><strong>Maintenance Schedule availability</strong>: Scheduling for common models may be readily available but because maintenance schedules are community-driven, owners of less common models may have to wait before a maintenance schedule is available.</li>
+  </ul>
+
+  <h2>9: Other product requirements</h2>
+  <ul>
+    <li><strong>Availability:</strong> Software must be able to run on all platforms including android and IOS operating systems.</li>
+    <li><strong>Scalability:</strong> Software must be able to handle multiple cars per user.</li>
+    <li><strong>Accessibility:</strong> User interface must use fonts that are easy to read and appeal to a wide range of users.</li>
+    <li><strong>Notifications:</strong> Users must be able to receive updates and reminders based on vehicle recommendations.</li>
+    <li><strong>Offline Availability:</strong> Users will be able to use the app and upload without the use of an internet connection.</li>
+    <li><strong>Maintainability:</strong> System should be structured that allows for future updates and features. Code and DS should support debugging and maintenance overtime.</li>
+    <li><strong>Security:</strong> Sensitive data should be protected, and User accounts should require authentication to access personal and vehicle data.</li>
+    <li><strong>Performance:</strong> Records and Vehicle data should be loaded quickly and easy to use, and uploading photos or receipts should be completed in a good amount of time.</li>
+  </ul>
+
+</body>
+</html>

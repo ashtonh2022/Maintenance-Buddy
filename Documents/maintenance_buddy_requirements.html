@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance Buddy Requirements</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #222; line-height: 1.6; }
+    h1 { font-size: 1.6em; }
+    h2 { font-size: 1.2em; margin-top: 1.5em; }
+    h3 { font-size: 1em; margin-top: 1.2em; }
+    p { margin: 0.4em 0; }
+    .entry { margin-bottom: 1.2em; }
+    .entry p { margin: 0.1em 0; }
+  </style>
+</head>
+<body>
+
+  <h1><code>Maintenance Buddy Requirements</code></h1>
+  <p><strong>Team members:</strong><br>Ashton Hull, Jordan Glatz, Daniel Vincent</p>
+
+  <h2>1. Purpose</h2>
+  <p>The purpose of this document is to define an outline for the requirements of Maintenance Buddy. Maintenance Buddy is a tool in the form of a mobile app that helps keep a complete maintenance log for your vehicle in one easy to access place. Users have the ability to input a multitude of information such as services performed, mileage, dates, receipts, photos, and notes. By doing this a log is created where information on your car can be easily organized. Furthermore, manufacturers provide recommended maintenance schedules based on vehicle make, model, and year, which can be used to keep users accountable. Maintenance Buddy will be a tool that will consistently help in caring for and maintaining your vehicle.</p>
+
+  <h2>2. Functional Requirements</h2>
+
+  <div class="entry">
+    <p><strong>2.1</strong> user_registration</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should allow users to register an account using email and password or google sign-in.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.2</strong> user_login</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to securely log in to their account.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.3</strong> user_logout</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to log out of their account.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.4</strong> reset_password</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should allow users to change their password.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.5</strong> add_vehicle</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should allow users to add a car to their profile with the correct year, make, and model.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.6</strong> vehicle_edit</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to edit vehicle information that is on their profiles.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.7</strong> vehicle_delete</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to delete vehicles that have been added to their profile.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.8</strong> create_service_event</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to create a service event, with the date and other service details.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.9</strong> edit_service_event</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to edit previously created service events.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.10</strong> delete_service_event</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to delete service events from their vehicle history.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.11</strong> upload_photos</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to upload up to 3 photos such as png, jpeg, etc. to a service event.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.12</strong> upload_docs</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to upload text-style documents, including pdf and txt, to a service event. Service events should be limited to 1 pdf attachment.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.13</strong> set_mileage_rate</p>
+    <p>Type: Functional</p>
+    <p>Summary: When getting started, the app should prompt users to estimate their yearly mileage. Default options should be provided. The app should estimate the user's mileage based on their provided mileage rate.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.14</strong> update_vehicle_mileage</p>
+    <p>Type: Functional</p>
+    <p>Summary: Upon completion of a service, the app should encourage the user to update their vehicle's current mileage so that cumulative estimation error may be reduced.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.15</strong> maintenance_notifications</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should send a notification to the user when it is time for vehicle maintenance by referencing the estimated current mileage.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.16</strong> export_summary_report</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to export a condensed maintenance summary in PDF or DOCX format.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.17</strong> summary_report_content</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The summary report should be limited to the most recent 30 services/3 pages and be text-only with a limit of 400 characters per service.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.18</strong> export_full_report</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to export the complete and unaltered maintenance history as a ZIP archive (one archive per vehicle, images included), organized as one folder per service.</p>
+  </div>
+
+  <h2>3. Interface Requirements</h2>
+
+  <div class="entry">
+    <p><strong>3.1</strong> organized_interface</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The user should be able to easily interact with and understand the app.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.2</strong> mobile_interface</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The interface should be mobile friendly.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.3</strong> camera_integration</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should be able to access and use the camera in order to take pictures.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.4</strong> photo_gallery_access</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should be able to have access to the gallery in order to upload pictures.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.5</strong> file_storage_access</p>
+    <p>Type: Functional</p>
+    <p>Summary: The system should have access to the files in system storage for the purpose of uploading them to the software.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.6</strong> notification_interface</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system should interface with the mobile operating system to send push notifications for maintenance reminders.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.7</strong> android_support</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system should work for android devices.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>3.8</strong> os_update_compatibility_risk</p>
+    <p>Type: Risk</p>
+    <p>Summary: Future operating system updates may cause compatibility issues that affect application functionality.</p>
+  </div>
+
+  <h2>4. Performance Requirements</h2>
+
+  <div class="entry">
+    <p><strong>4.1</strong> upload_speed</p>
+    <p>Type: Constraint</p>
+    <p>Summary: Photos and files should be uploaded in a timely manner.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>4.2</strong> upload_size</p>
+    <p>Type: Constraint</p>
+    <p>Summary: Uploaded photos and files should be limited in size. Photos should be limited to 5MB. PDF/TXT attachments should be limited to 10MB.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>4.3</strong> notification_speed</p>
+    <p>Type: Constraint</p>
+    <p>Summary: Notifications for vehicle maintenance reminders should be dispersed at the proper intervals.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>4.4</strong> scalability</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system should handle increasing numbers of users without significant performance degradation.</p>
+  </div>
+
+  <h2>5. Non-Functional Requirements</h2>
+
+  <div class="entry">
+    <p><strong>5.1</strong> software_availability</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system should be available to run on android platforms and be available at all times for use.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>5.2</strong> software_maintainability</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system should be structured in a way that allows future updates and feature additions without major redesign.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>5.3</strong> software_security</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system must be secure and protect user accounts, vehicle data, and uploaded documents from unauthorized access through proper authentication and encryption measures.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>5.4</strong> software_reliability</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system must be reliable at all times without crashing.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>5.5</strong> data_backup</p>
+    <p>Type: Constraint</p>
+    <p>Summary: The system should be able to back up data regularly in case of data loss.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>5.6</strong> data_loss</p>
+    <p>Type: Risk</p>
+    <p>Summary: Unexpected system failures may result in loss of data.</p>
+  </div>
+
+</body>
+</html>
