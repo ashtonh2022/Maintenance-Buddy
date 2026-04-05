@@ -10,13 +10,6 @@ DATABASE
 [ ] Finalize and enable RLS policies
 [ ] Seed manufacturer maintenance schedules for common makes/models
 
-SUPABASE CLIENT
----------------
-[x] Install @supabase/supabase-js
-[x] Install @react-native-async-storage/async-storage
-[x] Create Supabase client helper (utils/supabase.ts)
-[x] Configure environment variables (.env.local)
-
 AUTHENTICATION
 --------------
 [ ] Registration screen (email/password)
@@ -117,9 +110,3 @@ THEMING & UI
 [ ] Define color palette and typography
 [ ] Responsive, mobile-friendly layouts
 [ ] Accessible font sizes
-
-PLATFORM SUPPORT
-----------------
-[ ] Android testing
-[ ] iOS testing
-[ ] Web testing
