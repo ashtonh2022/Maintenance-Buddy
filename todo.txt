@@ -1,0 +1,125 @@
+MAINTENANCE BUDDY - TODO
+=========================
+
+DATABASE
+--------
+[x] Create initial schema (profiles, vehicles, maintenance_schedules, scheduled_services, timeline_entries, attachments, notifications)
+[x] Add indexes and constraints
+[x] Create vehicles_with_estimated_mileage view
+[x] Create trigger function for new user signup
+[ ] Finalize and enable RLS policies
+[ ] Seed manufacturer maintenance schedules for common makes/models
+
+SUPABASE CLIENT
+---------------
+[x] Install @supabase/supabase-js
+[x] Install @react-native-async-storage/async-storage
+[x] Create Supabase client helper (utils/supabase.ts)
+[x] Configure environment variables (.env.local)
+
+AUTHENTICATION
+--------------
+[ ] Registration screen (email/password)
+[ ] Login screen
+[ ] Logout functionality
+[ ] Password reset screen
+[ ] Mileage rate prompt during onboarding (low/medium/high/custom)
+[ ] Session management and auth state listener
+[ ] Protected routes (redirect unauthenticated users)
+
+NAVIGATION & LAYOUT
+--------------------
+[ ] Root layout with auth guard
+[ ] Tab navigator (dashboard, vehicles, history, settings)
+[ ] Stack navigators for sub-screens
+
+DASHBOARD
+---------
+[ ] Dashboard screen showing all vehicles
+[ ] Quick access to add vehicle
+[ ] Upcoming maintenance reminders summary
+[ ] Recent service events summary
+
+VEHICLE MANAGEMENT
+------------------
+[ ] Add vehicle screen (year, make, model)
+[ ] Edit vehicle screen
+[ ] Delete vehicle with confirmation
+[ ] Vehicle detail/profile screen
+[ ] Auto-search for existing maintenance schedule when adding vehicle
+[ ] Support multiple vehicles per account
+
+MAINTENANCE SCHEDULES
+---------------------
+[ ] Browse/search existing schedules by year/make/model
+[ ] Create custom maintenance schedule
+[ ] Schedule approval workflow (draft/pending/approved)
+[ ] Display scheduled services with mile and month intervals
+
+SERVICE EVENTS
+--------------
+[ ] Create service event screen (date, mileage, type, description)
+[ ] Edit service event screen
+[ ] Delete service event with confirmation
+[ ] Service type options (self-service, cosmetic mod, performance mod)
+[ ] Attach photos to service event (max 3, PNG/JPEG, max 5MB each)
+[ ] Attach documents to service event (max 1 PDF/TXT, max 10MB)
+[ ] File type and size validation
+
+APPOINTMENTS
+------------
+[ ] Create appointment entry (date, time, mechanic shop, work description)
+[ ] Edit appointment
+[ ] Delete appointment
+[ ] Convert completed appointment to service event
+[ ] Appointment reminder notifications
+
+TIMELINE / HISTORY
+------------------
+[ ] Chronological timeline view per vehicle
+[ ] Show both service events and appointments
+[ ] Expand entries to view full details (miles, description, photos, documents)
+[ ] Completed appointments shown as service events on timeline
+
+MILEAGE TRACKING
+----------------
+[ ] Set estimated yearly mileage rate during setup
+[ ] Update vehicle mileage manually (odometer reading)
+[ ] Estimated mileage calculation based on rate and time elapsed
+[ ] Recalculate maintenance reminders after mileage update
+
+NOTIFICATIONS
+-------------
+[ ] Push notification setup (expo-notifications)
+[ ] Maintenance due notifications based on schedule vs estimated mileage
+[ ] Appointment reminder notifications
+[ ] Notification preferences/settings
+
+FILE UPLOADS
+------------
+[ ] Camera integration for photos
+[ ] Photo gallery picker
+[ ] File system picker for documents
+[ ] Upload to Supabase storage
+[ ] File validation (type, size)
+
+EXPORT / REPORTS
+----------------
+[ ] Maintenance summary export (PDF, max 30 services/3 pages, 400 chars per service, text-only)
+[ ] Full report export (ZIP archive, folders per service, includes photos/docs)
+[ ] Download/share exported file
+[ ] Error handling for insufficient storage
+
+THEMING & UI
+------------
+[ ] Implement color scheme hooks (use-color-scheme.ts, use-color-scheme.web.ts)
+[ ] Implement theme color hook (use-theme-color.ts)
+[ ] Define color palette and typography
+[ ] Responsive, mobile-friendly layouts
+[ ] Accessible font sizes
+
+PLATFORM SUPPORT
+----------------
+[ ] Android testing
+[ ] iOS testing
+[ ] Web testing
