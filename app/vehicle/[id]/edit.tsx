@@ -1,1 +1,2 @@
-export { default } from '@/src/screens/vehicles/EditVehicle';
+import EditVehicle from "@/src/screens/vehicles/EditVehicle";
+export default EditVehicle;
