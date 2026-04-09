@@ -1,1 +1,1 @@
-export { default } from '@/src/screens/vehicles/AddVehicle';
+export { default } from '@/screens/vehicles/AddVehicle';

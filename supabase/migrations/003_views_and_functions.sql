@@ -1,15 +1,9 @@
--- Trigger: Automatically fills user defaults in the DB upon insert into auth
+-- Trigger: Automatically creates a profile when a new user signs up
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
-DECLARE
-new_pantry_id UUID;
 BEGIN
-
-INSERT INTO public.users (user_id, first_name, last_name, email)
-VALUES (NEW.id, '', '', NEW.email;
-
-INSERT INTO public.user_preferences (user_id, measurement_units)
-VALUES (NEW.id, imperial);
+INSERT INTO public.profiles (id, username)
+VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'username', NEW.email));
 
 RETURN NEW;
 END;
