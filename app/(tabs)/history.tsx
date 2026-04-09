@@ -1,1 +1,1 @@
-export { default } from '@/src/screens/history/Timeline';
+export { default } from '@/screens/history/Timeline';

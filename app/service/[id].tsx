@@ -1,1 +1,1 @@
-export { default } from '@/src/screens/service/EditService';
+export { default } from '@/screens/service/EditService';

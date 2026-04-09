@@ -1,1 +1,1 @@
-export { default } from '@/src/screens/schedule/ManageSchedule';
+export { default } from '@/screens/schedule/ManageSchedule';
