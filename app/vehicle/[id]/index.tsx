@@ -1,2 +1,2 @@
-import VehicleDetail from "@/src/screens/vehicles/VehicleDetail";
+import VehicleDetail from "@/screens/vehicles/VehicleDetail";
 export default VehicleDetail;

@@ -1,1 +1,1 @@
-export { default } from '@/src/screens/appointment/AddAppointment';
+export { default } from '@/screens/appointment/AddAppointment';

@@ -1,2 +1,2 @@
-import EditVehicle from "@/src/screens/vehicles/EditVehicle";
+import EditVehicle from "@/screens/vehicles/EditVehicle";
 export default EditVehicle;

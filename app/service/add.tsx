@@ -1,1 +1,1 @@
-export { default } from '@/src/screens/service/AddService';
+export { default } from '@/screens/service/AddService';
