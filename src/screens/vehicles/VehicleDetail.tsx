@@ -1,19 +1,18 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { useVehicle } from "@/hooks/useVehicles";
 
 export default function VehicleDetail() {
-    const params = useLocalSearchParams();
-    const id = String(params.id ?? "");
-    const make = String(params.make ?? "");
-    const model = String(params.model ?? "");
-    const year = String(params.year ?? "");
-    const recent_mileage = String(params.recent_mileage ?? "");
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const { data: vehicle, isLoading } = useVehicle(id!);
+
+    if (isLoading) return <ActivityIndicator style={styles.container} />;
 
     return (
         <View style={styles.container}>
         <View style={styles.topRow}>
-        <Pressable style={styles.editButton} onPress={() => router.push("/vehicle/edit")}>
+        <Pressable style={styles.editButton} onPress={() => router.push(`/vehicle/${id}/edit`)}>
         <Text style={styles.editButtonText}>Edit</Text>
         </Pressable>
         </View>
@@ -21,20 +20,17 @@ export default function VehicleDetail() {
         <Text style={styles.title}>Vehicle Details</Text>
         <View style={styles.card}>
 
-        <Text style={styles.label}>ID</Text>
-        <Text style={styles.value}>{id}</Text>
-
         <Text style={styles.label}>Make</Text>
-        <Text style={styles.value}>{make}</Text>
+        <Text style={styles.value}>{vehicle?.make}</Text>
 
         <Text style={styles.label}>Model</Text>
-        <Text style={styles.value}>{model}</Text>
+        <Text style={styles.value}>{vehicle?.model}</Text>
 
         <Text style={styles.label}>Year</Text>
-        <Text style={styles.value}>{year}</Text>
+        <Text style={styles.value}>{vehicle?.year}</Text>
 
         <Text style={styles.label}>Mileage</Text>
-        <Text style={styles.value}>{recent_mileage}</Text>
+        <Text style={styles.value}>{vehicle?.recent_mileage}</Text>
         </View>
         </View>
     );

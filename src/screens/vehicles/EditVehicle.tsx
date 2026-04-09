@@ -1,13 +1,28 @@
-import { router } from "expo-router";
-import React, { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { router, useLocalSearchParams } from 'expo-router';
+import { useState, useEffect } from 'react';
+import {View, Text, TextInput, Pressable, Alert} from 'react-native';
+import { useVehicle } from '../../hooks/useVehicles';
+import { useQueryClient } from '@tanstack/react-query';
 
 //variables
 export default function EditVehicle() {
+    const { id } = useLocalSearchParams();
+    const { data: vehicle, isLoading } = useVehicle(String(id));
+    const queryClient = useQueryClient();
+
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [year, setYear] = useState("");
     const [mileage, setMileage] = useState("");
+
+    useEffect(() => {
+        if (vehicle) {
+            setMake(vehicle.make ?? '');
+            setModel(vehicle.model ?? '');
+            setYear(String(vehicle.year ?? ''));
+            setMileage(String(vehicle.recent_mileage ?? ''));
+        }
+    }, [vehicle]);
 
     //function for button
     const handleSaveChanges = () => {
