@@ -1,6 +1,9 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {useAddVehicle} from "@/hooks/useVehicles";
+import {useAuth} from "@/contexts/AuthContext";
+
 
 //variables
 export default function AddVehicle() {
@@ -9,8 +12,12 @@ export default function AddVehicle() {
     const [year, setYear] = useState("");
     const [mileage, setMileage] = useState("");
 
+    const addVehicle = useAddVehicle();
+    const { session } = useAuth();
+
     //function for button
     const handleAddVehicle = () => {
+        if (!session?.user?.id) return;
       //if user leaves any fields empty prompts error message
       if (!make || !model || !year || !mileage) {
         Alert.alert("Error", "Please fill in all fields");
@@ -22,13 +29,13 @@ export default function AddVehicle() {
         make,
         model,
         year: Number(year), 
-        recent_mileage: Number(mileage), 
+        recent_mileage: Number(mileage),
+          user_id: session.user.id
       };
 
-      //FIXME: store vehicle in database
-      //addVehicle(newVehicle);
+      addVehicle.mutate(newVehicle);
 
-      //popup letting user know vehicle was added then routes back to dashboard
+        //popup letting user know vehicle was added then routes back to dashboard
       Alert.alert("Success", "Vehicle added", [{text: "OK", onPress: () => router.back(),},]);
     };
 
