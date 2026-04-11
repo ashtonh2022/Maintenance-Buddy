@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { ProfileRow, ProfileInsert, ProfileUpdate } from "@/types/types";
-import {async} from "@firebase/util";
+import { ProfileRow, ProfileUpdate } from "@/types/types";
 
 export const getProfile = async (profile: ProfileRow) => {}
 export const updateProfile = async (profile: ProfileUpdate) => {}
