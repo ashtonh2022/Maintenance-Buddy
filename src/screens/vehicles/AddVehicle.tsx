@@ -16,7 +16,7 @@ export default function AddVehicle() {
     const { session } = useAuth();
 
     //function for button
-    const handleAddVehicle = () => {
+    const handleAddVehicle = async () => {
         if (!session?.user?.id) return;
       //if user leaves any fields empty prompts error message
       if (!make || !model || !year || !mileage) {
@@ -28,15 +28,18 @@ export default function AddVehicle() {
       const newVehicle = {
         make,
         model,
-        year: Number(year), 
+        year: Number(year),
         recent_mileage: Number(mileage),
         user_id: session.user.id
       };
 
-      addVehicle.mutate(newVehicle);
-
+      try {
+        await addVehicle.mutateAsync(newVehicle);
         //popup letting user know vehicle was added then routes back to dashboard
-      Alert.alert("Success", "Vehicle added", [{text: "OK", onPress: () => router.back(),},]);
+        Alert.alert("Success", "Vehicle added", [{text: "OK", onPress: () => router.back(),},]);
+      } catch (error: any) {
+        Alert.alert("Error", error.message || "Failed to add vehicle");
+      }
     };
 
   //screen display

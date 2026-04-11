@@ -22,7 +22,7 @@ export async function getVehicles() {
 export async function getVehicle(id: string) {
     const { data, error } = await supabase
         .from('vehicles')
-        .select('*, timeline(*)')
+        .select('*, timeline_entries(*)')
         .eq('id', id)
         .single();
     if (error) throw error;

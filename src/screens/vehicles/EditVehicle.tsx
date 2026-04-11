@@ -6,14 +6,13 @@ import { useVehicle } from '../../hooks/useVehicles';
 
 //variables
 export default function EditVehicle() {
-    const { id } = useLocalSearchParams();
-    const { data: vehicle, isLoading } = useVehicle(String(id));
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const { data: vehicle, isLoading } = useVehicle(String(id!));
     const queryClient = useQueryClient();
 
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [year, setYear] = useState("");
-    
     const [mileage, setMileage] = useState("");
 
     useEffect(() => {
