@@ -1,8 +1,8 @@
+import { useAuth } from "@/contexts/AuthContext";
+import { useAddVehicle } from "@/hooks/useVehicles";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import {useAddVehicle} from "@/hooks/useVehicles";
-import {useAuth} from "@/contexts/AuthContext";
 
 
 //variables
@@ -30,7 +30,7 @@ export default function AddVehicle() {
         model,
         year: Number(year), 
         recent_mileage: Number(mileage),
-          user_id: session.user.id
+        user_id: session.user.id
       };
 
       addVehicle.mutate(newVehicle);

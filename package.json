@@ -9,7 +9,6 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "gen-types": "supabase gen types typescript --project-id zcixtbrtmkuwqlukrvsr > src/types/database.types.ts"
-
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -18,7 +17,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@supabase/supabase-js": "^2.101.1",
-    "@tanstack/react-query": "^5.96.2",
+    "@tanstack/react-query": "^5.97.0",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
     "expo-font": "~14.0.11",

@@ -1,8 +1,8 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { useState, useEffect } from 'react';
-import {View, Text, TextInput, Pressable, Alert} from 'react-native';
-import { useVehicle } from '../../hooks/useVehicles';
 import { useQueryClient } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Alert, Pressable, Text, TextInput, View } from 'react-native';
+import { useVehicle } from '../../hooks/useVehicles';
 
 //variables
 export default function EditVehicle() {
@@ -13,6 +13,7 @@ export default function EditVehicle() {
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [year, setYear] = useState("");
+    
     const [mileage, setMileage] = useState("");
 
     useEffect(() => {

@@ -12,12 +12,12 @@ DATABASE
 
 AUTHENTICATION
 --------------
-[ ] Registration screen (email/password)
-[ ] Login screen
-[ ] Logout functionality
-[ ] Password reset screen
-[ ] Mileage rate prompt during onboarding (low/medium/high/custom)
-[ ] Session management and auth state listener
+[X] Registration screen (email/password)
+[X] Login screen
+[X] Logout functionality
+[X] Password reset screen
+[X] Mileage rate prompt during onboarding (low/medium/high/custom)
+[X] Session management and auth state listener
 [ ] Protected routes (redirect unauthenticated users)
 
 NAVIGATION & LAYOUT
