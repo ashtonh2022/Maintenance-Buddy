@@ -55,7 +55,7 @@ export default function Login() {
             </Text>
         </Pressable>
 
-        <Pressable onPress={() => router.push("/(auth)/register")}>
+        <Pressable onPress={() => router.push("/register")}>
             <Text style={styles.link}>Need an account? Sign up</Text>
         </Pressable>
         </View>

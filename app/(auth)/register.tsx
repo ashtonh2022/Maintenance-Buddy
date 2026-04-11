@@ -45,7 +45,7 @@ export default function Register() {
             await signUpMutation.mutateAsync({ email, password, mileageRate: finalMileageRate});
             Alert.alert("Success", "Account created", [{
                 text: "OK",
-                onPress: () => router.replace("/(auth)/login"),
+                onPress: () => router.replace("/login"),
             },]);
         } catch (error: any) {
             Alert.alert("Register Failed", error.message || "Something went wrong");
@@ -132,7 +132,7 @@ export default function Register() {
             </Text>
         </Pressable>
 
-        <Pressable onPress={() => router.push("/(auth)/login")}>
+        <Pressable onPress={() => router.push("/login")}>
             <Text style={styles.link}>Already have an account? Login</Text>
         </Pressable>
         </View>
