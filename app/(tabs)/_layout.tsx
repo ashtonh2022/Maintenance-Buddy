@@ -14,18 +14,18 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="Notifications"
+        name="notifications"
         options={{
-          title: 'notifications',
+          title: 'Notifications',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="notifications-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="Reports"
+        name="reports"
         options={{
-          title: 'reports',
+          title: 'Reports',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="folder-outline" size={size} color={color} />
           ),

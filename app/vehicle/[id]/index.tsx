@@ -12,6 +12,11 @@ export default function VehicleDetail() {
     return (
         <View style={styles.container}>
         <View style={styles.topRow}>
+        
+        <Pressable style={styles.backButton} onPress={() => router.push("/(tabs)")}>
+        <Text style={styles.backButtonText}>← Back to Dashboard</Text>
+        </Pressable>
+
         <Pressable style={styles.editButton} onPress={() => router.push(`/vehicle/${id}/edit`)}>
         <Text style={styles.editButtonText}>Edit</Text>
         </Pressable>
@@ -43,10 +48,22 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     topRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         marginBottom: 20,
     },
+    backButton: {
+        backgroundColor: "#2323FF",
+        paddingVertical: 8,
+        paddingHorizontal: 14,
+        borderRadius: 8,
+    },
+    backButtonText: {
+        color: "#fff",
+        fontWeight: "600",
+    },
     editButton: {
-        alignSelf: "flex-start",
         backgroundColor: "#2323FF",
         paddingVertical: 8,
         paddingHorizontal: 14,

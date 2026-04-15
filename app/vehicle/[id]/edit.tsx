@@ -1,4 +1,4 @@
-import { useVehicle } from '@/hooks/useVehicles';
+import { useDeleteVehicle, useUpdateVehicle, useVehicle } from '@/hooks/useVehicles';
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,8 @@ export default function EditVehicle() {
     const [model, setModel] = useState("");
     const [year, setYear] = useState("");
     const [mileage, setMileage] = useState("");
+    const updateVehicleMutation = useUpdateVehicle();
+    const deleteVehicleMutation = useDeleteVehicle();
 
     useEffect(() => {
         if (vehicle) {
@@ -25,36 +27,40 @@ export default function EditVehicle() {
     }, [vehicle]);
 
     //function for button
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async() => {
         //if user leaves any fields empty
         if (!make || !model || !year || !mileage) {
             Alert.alert("Error", "Please fill in all fields");
             return;
         }
 
-        //creates vehicle object with updated information
-        const updatedVehicle = {
+        try {
+        await updateVehicleMutation.mutateAsync({
+            id: String(id),
             make,
             model,
             year: Number(year),
             recent_mileage: Number(mileage),
-        };
+        });
 
-        //FIXME: update vehicle in db using updatedVehicle
-        //updateVehicle(updatedVehicle)
-
-        //popup letting user know vehicle was added then routes back to dashboard
-        Alert.alert("Success", "Vehicle Updated", [{text: "OK", onPress: () => router.back(),},]);
-
-    };
+        Alert.alert("Success", "Vehicle Updated", [
+            { text: "OK", onPress: () => router.back() },
+        ]);
+    } catch (error: any) {
+        Alert.alert("Error", error.message || "Failed to update vehicle");
+    }
+};
     //Delete button
     const handleDelete = () => {
         Alert.alert("Delete Vehicle", "Are you sure you want to delete this vehicle?",[{
             text: "Cancel", style: "cancel",}, {
-            text: "Delete", style: "destructive", onPress: () => {
-                //FIXME: delete vehicle from database
-                //deleteVehicle(id)
-                router.back();
+            text: "Delete", style: "destructive", onPress: async() => {
+                try {
+                        await deleteVehicleMutation.mutateAsync(String(id));
+                        router.back();
+                    } catch (error: any) {
+                        Alert.alert("Error", error.message || "Failed to delete vehicle");
+                    }
             },},
         ]);
     };

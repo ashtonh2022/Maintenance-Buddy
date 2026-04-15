@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { VehicleRow, VehicleInsert, VehicleUpdate } from "@/types/types";
+import { VehicleInsert, VehicleRow, VehicleUpdate } from "@/types/types";
 
 export async function addVehicle(vehicle: VehicleInsert) {
     const { data, error } = await supabase
@@ -29,5 +29,25 @@ export async function getVehicle(id: string) {
     return data;
 }
 
-export const updateVehicle = (vehicle: VehicleUpdate) => {}
-export const deleteVehicle = () => {}
+export async function updateVehicle(vehicle: VehicleUpdate): Promise<VehicleRow> {
+    const { id, ...updates } = vehicle;
+
+    const { data, error } = await supabase
+        .from("vehicles")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+export async function deleteVehicle(id: string) {
+    const { error } = await supabase
+        .from("vehicles")
+        .delete()
+        .eq("id", id);
+
+    if (error) throw error;
+}
