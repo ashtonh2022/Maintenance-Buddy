@@ -13,12 +13,18 @@ export async function signUp(email: string, password: string, mileageRate: numbe
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-            data: {
-            mileage_rate: mileageRate,
-            },
-        },
+        options: {data: {mileage_rate: mileageRate,},},
     });
+    if (error) throw error;
+    return data;
+}
+
+export async function saveUserMileage(id: string, yearlyMileageRate: number) {
+    const { data, error } = await supabase
+        .from('profiles')
+        .upsert({id, yearly_mileage_rate: yearlyMileageRate,})
+        .select()
+        .single();
     if (error) throw error;
     return data;
 }

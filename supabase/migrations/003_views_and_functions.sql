@@ -2,8 +2,8 @@
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-INSERT INTO public.profiles (id, username)
-VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'username', NEW.email));
+INSERT INTO public.profiles (id)
+VALUES (NEW.id);
 
 RETURN NEW;
 END;

@@ -76,7 +76,7 @@ TIMELINE / HISTORY
 
 MILEAGE TRACKING
 ----------------
-[ ] Set estimated yearly mileage rate during setup
+[X] Set estimated yearly mileage rate during setup
 [ ] Update vehicle mileage manually (odometer reading)
 [ ] Estimated mileage calculation based on rate and time elapsed
 [ ] Recalculate maintenance reminders after mileage update
