@@ -1,4 +1,5 @@
 import { useSignOut } from "@/hooks/useAuth";
+import { router } from "expo-router";
 import React from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -9,6 +10,7 @@ export default function Settings() {
     const handleSignOut = async () => {
         try {
             await signOutMutation.mutateAsync();
+            router.replace("/(auth)/login");
         } catch (error: any) {
             Alert.alert("Sign Out Failed", error.message || "Something went wrong");
         }

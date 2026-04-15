@@ -1,7 +1,7 @@
 // hooks/useVehicles.ts
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {addVehicle, getVehicle, getVehicles} from '@/services/vehicles';
-import {VehicleInsert} from "@/types/types";
+import { addVehicle, deleteVehicle, getVehicle, getVehicles, updateVehicle } from '@/services/vehicles';
+import { VehicleInsert, VehicleUpdate } from "@/types/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useVehicles() {
     return useQuery({
@@ -34,3 +34,25 @@ export function useAddVehicle() {
     });
 }
 
+export function useUpdateVehicle() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (vehicle: VehicleUpdate) => updateVehicle(vehicle),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+            queryClient.invalidateQueries({ queryKey: ["vehicle", variables.id] });
+        },
+    });
+}
+
+export function useDeleteVehicle() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => deleteVehicle(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+        },
+    });
+}

@@ -5,8 +5,8 @@ create type schedule_status as enum ('draft', 'pending', 'approved');
 -- Profiles extends Supabase auth.users
 create table profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  username text not null,
   role text not null default 'user' check (role in ('user', 'admin')),
+  yearly_mileage_rate integer,
   created_at timestamptz not null default now()
 );
 

@@ -9,6 +9,7 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [mileageRate, setMileageRate] = useState<string>("");
     const [customMileage, setCustomMileage] = useState<string>("");
+    const [loading, setLoading] = useState(false);
 
     const signUpMutation = useSignUp();
 
@@ -26,26 +27,26 @@ export default function Register() {
         }
 
         //asks user for their mileage
-        let finalMileageRate = 0;
+        let yearlyMileageRate = 0;
         if (mileageRate === "low") {
-            finalMileageRate = 500;
+            yearlyMileageRate = 5000;
         } else if (mileageRate === "medium") {
-            finalMileageRate = 1000;
+            yearlyMileageRate = 12000;
         } else if (mileageRate === "high") {
-            finalMileageRate = 1500;
+            yearlyMileageRate = 15000;
         } else if (mileageRate === "custom") {
             if (!customMileage) {
                 Alert.alert("Error", "Please enter a custom mileage rate");
                 return;
             }
-            finalMileageRate = Number(customMileage);
+            yearlyMileageRate = Number(customMileage);
         }
 
         try {
-            await signUpMutation.mutateAsync({ email, password, mileageRate: finalMileageRate});
+            await signUpMutation.mutateAsync({ email, password, mileageRate: yearlyMileageRate});
             Alert.alert("Success", "Account created", [{
                 text: "OK",
-                onPress: () => router.replace("/login"),
+                onPress: () => router.replace("/(auth)/login"),
             },]);
         } catch (error: any) {
             Alert.alert("Register Failed", error.message || "Something went wrong");
@@ -87,29 +88,41 @@ export default function Register() {
         <Pressable
             style={[styles.option, mileageRate === "low" && styles.selectedOption]}
             onPress={() => setMileageRate("low")}
+            disabled={signUpMutation.isPending}
         >
-            <Text>Low</Text>
+            <Text style={mileageRate === "low" ? styles.selectedOptionText : styles.optionText}>
+                    5,000 miles/year (Low)
+                </Text>
         </Pressable>
 
         <Pressable
             style={[styles.option, mileageRate === "medium" && styles.selectedOption]}
             onPress={() => setMileageRate("medium")}
+            disabled={signUpMutation.isPending}
         >
-            <Text>Medium</Text>
+            <Text style={mileageRate === "medium" ? styles.selectedOptionText : styles.optionText}>
+                    12,000 miles/year (Medium)
+                </Text>
         </Pressable>
 
         <Pressable
             style={[styles.option, mileageRate === "high" && styles.selectedOption]}
             onPress={() => setMileageRate("high")}
+            disabled={signUpMutation.isPending}
         >
-            <Text>High</Text>
+            <Text style={mileageRate === "high" ? styles.selectedOptionText : styles.optionText}>
+                    15,000 miles/year (High)
+                </Text>
         </Pressable>
 
         <Pressable
             style={[styles.option, mileageRate === "custom" && styles.selectedOption]}
             onPress={() => setMileageRate("custom")}
+            disabled={signUpMutation.isPending}
         >
-            <Text>Custom</Text>
+            <Text style={mileageRate === "custom" ? styles.selectedOptionText : styles.optionText}>
+                    Custom
+                </Text>
         </Pressable>
 
         {mileageRate === "custom" && (
@@ -171,7 +184,15 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     selectedOption: {
-        backgroundColor: "#ffffff",
+        backgroundColor: "#2323FF",
+        borderColor: "#2323FF",
+    },
+    optionText: {
+        color: "#000",
+    },
+    selectedOptionText: {
+        color: "#fff",
+        fontWeight: "600",
     },
     button: {
         backgroundColor: "#2323FF",
