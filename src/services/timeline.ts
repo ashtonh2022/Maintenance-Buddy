@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { timelineEntryInsert, timelineEntryRow, timelineEntryUpdate } from "@/types/types";
 
-export const addtimelineEntry = async(timelineEntry: timelineEntryInsert): Promise<timelineEntryRow> => {
+export const addTimelineEntry = async(timelineEntry: timelineEntryInsert): Promise<timelineEntryRow> => {
     const { data, error } = await supabase
         .from("timeline_entries")
         .insert(timelineEntry)
@@ -11,17 +11,29 @@ export const addtimelineEntry = async(timelineEntry: timelineEntryInsert): Promi
     return data;
 }
 
-export const gettimelineEntry = async(vehicleId: string): Promise<timelineEntryRow[]> => {
+export const getTimelineEntry = async(vehicleId: string): Promise<timelineEntryRow[]> => {
     const { data, error } = await supabase
         .from("timeline_entries")
         .select("*")
         .eq("vehicle_id", vehicleId)
+        .eq("is_completed", true)
         .order("date",{ascending: false});
     if (error) throw error;
     return data;
 }
 
-export const updatetimelineEntry = async(id: string, timelineEntry: timelineEntryUpdate): Promise<timelineEntryRow> => {
+export const getServiceEvents = async (vehicleId: string): Promise<timelineEntryRow[]> => {
+    const { data, error } = await supabase
+        .from("timeline_entries")
+        .select("*")
+        .eq("vehicle_id", vehicleId)
+        .eq("is_completed", false)
+        .order("date", { ascending: true });
+    if (error) throw error;
+    return data;
+};
+
+export const updateTimelineEntry = async(id: string, timelineEntry: timelineEntryUpdate): Promise<timelineEntryRow> => {
     const { data, error } = await supabase
         .from("timeline_entries")
         .update(timelineEntry)
@@ -32,7 +44,7 @@ export const updatetimelineEntry = async(id: string, timelineEntry: timelineEntr
     return data;
 }
 
-export const deletetimelineEntry = async(id: string): Promise<void> => {
+export const deleteTimelineEntry = async(id: string): Promise<void> => {
     const { error } = await supabase
         .from("timeline_entries")
         .delete()
