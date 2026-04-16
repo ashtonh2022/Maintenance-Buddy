@@ -1,4 +1,4 @@
-import { addTimelineEntry, deleteTimelineEntry, getTimelineEntry, updateTimelineEntry, getServiceEvents } from "@/services/timeline";
+import { addTimelineEntry, deleteTimelineEntry, getTimelineEntry, updateTimelineEntry, getServiceEvents, getAllAppointments, addServiceEvent } from "@/services/timeline";
 import { timelineEntryInsert, timelineEntryRow, timelineEntryUpdate } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -7,6 +7,17 @@ export function useTimeline(vehicleId: string) {
         queryKey: ["timeline", vehicleId],
         queryFn: () => getTimelineEntry(vehicleId),
         enabled: !!vehicleId,
+    });
+}
+
+export function useAddServiceEvent() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: addServiceEvent,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["serviceEvents"] });
+        },
     });
 }
 
@@ -69,5 +80,12 @@ export function useDeleteTimelineEntry(vehicleId: string) {
                 queryKey: ["serviceEvents", vehicleId],
             });
         },
+    });
+}
+
+export function useAllAppointments() {
+    return useQuery({
+        queryKey: ["allAppointments"],
+        queryFn: getAllAppointments,
     });
 }

@@ -2,13 +2,30 @@ import { useVehicles } from "@/hooks/useVehicles";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useAllAppointments } from "@/hooks/useTimeline";
 
 export default function Dashboard() {
     const { data: vehicles, isLoading, error } = useVehicles();
+    const { data: appointments, isLoading: appointmentsLoading, error: appointmentsError } = useAllAppointments();
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Dashboard</Text>
+
+            <Text style={styles.sectionTitle}>Upcoming Appointments</Text>
+            {appointmentsLoading && <Text style={styles.emptyText}>Loading appointments...</Text>}
+            {appointmentsError && <Text style={styles.emptyText}>Failed to load appointments.</Text>}
+            {!appointmentsLoading && !appointmentsError && appointments?.length === 0 && (<Text style={styles.emptyText}>No upcoming appointments.</Text>)}
+
+        {!appointmentsLoading && !appointmentsError && appointments?.map((appointment) => (
+            <View key={appointment.id} style={styles.card}>
+                <Text style={styles.cardTitle}>{appointment.service_type}</Text>
+                <Text style={styles.cardText}>{appointment.date}</Text>
+                {appointment.time ? <Text style={styles.cardText}>{appointment.time}</Text> : null}
+                {appointment.description ? <Text style={styles.cardText}>{appointment.description}</Text> : null}
+                {appointment.mechanic_shop ? (<Text style={styles.cardText}>Shop: {appointment.mechanic_shop}</Text>) : null}
+            </View>
+        ))}
 
             <Pressable
                 style={styles.addButton}
@@ -87,4 +104,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#444",
     },
+    sectionTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    marginTop: 10,
+    marginBottom: 10,
+},
 });

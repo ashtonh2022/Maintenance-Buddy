@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Vehicles() {
+export default function Reports() {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Vehicles list coming soon.</Text>
+            <Text style={styles.text}>reports coming soon.</Text>
         </View>
     );
 }

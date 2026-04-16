@@ -1,7 +1,7 @@
 import { useVehicle } from "@/hooks/useVehicles";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
 import { useServiceEvents, useTimeline, useDeleteTimelineEntry, useUpdateTimelineEntry } from "@/hooks/useTimeline";
 
 export default function VehicleDetail() {
@@ -16,20 +16,16 @@ export default function VehicleDetail() {
     
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.topRow}>
                 <Pressable style={styles.backButton} onPress={() => router.push("/(tabs)")}>
                     <Text style={styles.backButtonText}>← Back to Dashboard</Text>
                 </Pressable>
 
-        <Pressable style={styles.editButton} onPress={() => router.push(`/vehicle/${id}/edit`)}>
-            <Text style={styles.editButtonText}>Edit</Text>
-        </Pressable>
+            <Pressable style={styles.editButton} onPress={() => router.push(`/vehicle/${id}/edit`)}>
+                <Text style={styles.editButtonText}>Edit</Text>
+            </Pressable>
         </View>
-
-        <Pressable onPress={() => router.push(`/service/add?id=${id}`)}>
-            <Text>Add Service Event</Text>
-        </Pressable>
 
         <Text style={styles.title}>Vehicle Details</Text>
             <View style={styles.card}>
@@ -47,20 +43,25 @@ export default function VehicleDetail() {
                 <Text style={styles.value}>{vehicle?.recent_mileage}</Text>
             </View>
 
-            <Text style={styles.heading}>Timeline</Text>
+            <Text style={styles.heading}>Service History</Text>
+
+            <Pressable
+                style={styles.addButton}
+                onPress={() => router.push(`/service/add?id=${id}`)}
+            >
+                <Text style={styles.addButtonText}>Add Service</Text>
+            </Pressable>
 
             {timelineLoading && <ActivityIndicator />}
             {timelineError && <Text>Error loading timeline</Text>}
-            {!timelineLoading && !timelineError && timeline?.length === 0 && (
-                <Text>No timeline entries</Text>
-            )}
+            {!timelineLoading && !timelineError && timeline?.length === 0 && (<Text>No timeline entries</Text>)}
 
             {timeline?.map((entry) => (
                 <View key={entry.id} style={styles.section}>
                     <Text>{entry.service_type}</Text>
                     <Text>{entry.date}</Text>
                     {entry.description ? <Text>{entry.description}</Text> : null}
-                    {entry.mileageAtService ? <Text>Mileage: {entry.mileage_at_service}</Text> : null}
+                    {entry.mileage_at_service ? <Text>Mileage: {entry.mileage_at_service}</Text> : null}
                     {entry.mechanic_shop ? <Text>Shop: {entry.mechanic_shop}</Text> : null}
 
                     <Pressable onPress={() => deleteEntry.mutate(entry.id)}>
@@ -69,16 +70,12 @@ export default function VehicleDetail() {
                 </View>
             ))}
 
-            <Pressable style={styles.addButton} onPress={() => router.push(`/service/add?id=${id}`)}>
-                <Text style={styles.addButtonText}>Add Service Event</Text>
-            </Pressable>
-
-            <Text style={styles.heading}>Service Events</Text>
+            <Text style={styles.heading}>Upcoming Apointments</Text>
 
             {serviceEventsLoading && <ActivityIndicator />}
             {serviceEventsError && <Text>Error loading service events</Text>}
             {!serviceEventsLoading && !serviceEventsError && serviceEvents?.length === 0 && (
-                <Text>No service events</Text>
+                <Text>No upcoming Apointments</Text>
             )}
 
             {serviceEvents?.map((entry) => (
@@ -103,15 +100,19 @@ export default function VehicleDetail() {
                     </Pressable>
                 </View>
             ))}
-        </View>
+            <Pressable style={styles.addButton} onPress={() => router.push(`/appointment/add?id=${id}`)}>
+                <Text style={styles.addButtonText}>Add Apointment</Text>
+            </Pressable>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: "#fff",
         padding: 20,
+        paddingBottom: 40,
     },
     topRow: {
         flexDirection: "row",
@@ -174,7 +175,6 @@ const styles = StyleSheet.create({
     addButton: {
     marginBottom: 16,
     },
-
     addButtonText: {
         fontSize: 16,
         fontWeight: "600",
