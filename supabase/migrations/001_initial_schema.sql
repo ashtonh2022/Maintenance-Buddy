@@ -60,6 +60,7 @@ create table timeline_entries (
   description text,
   mileageAtService int,
   mechanic_shop text,
+  tags text[] default '{}',
   is_completed boolean not null default false,
   created_at timestamptz not null default now()
 );

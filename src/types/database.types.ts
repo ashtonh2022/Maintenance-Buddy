@@ -204,6 +204,7 @@ export type Database = {
           service_type: string
           time: string | null
           vehicle_id: string
+          tags: string[] | null
         }
         Insert: {
           created_at?: string
@@ -217,6 +218,7 @@ export type Database = {
           service_type: string
           time?: string | null
           vehicle_id: string
+          tags?: string[] | null
         }
         Update: {
           created_at?: string
@@ -230,6 +232,7 @@ export type Database = {
           service_type?: string
           time?: string | null
           vehicle_id?: string
+          tags?: string[] | null
         }
         Relationships: [
           {
