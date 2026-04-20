@@ -29,12 +29,10 @@ export async function getVehicle(id: string) {
     return data;
 }
 
-export async function updateVehicle(vehicle: VehicleUpdate): Promise<VehicleRow> {
-    const { id, ...updates } = vehicle;
-
+export async function updateVehicle(id: string, vehicle: VehicleUpdate): Promise<VehicleRow> {
     const { data, error } = await supabase
         .from("vehicles")
-        .update(updates)
+        .update(vehicle)
         .eq("id", id)
         .select()
         .single();

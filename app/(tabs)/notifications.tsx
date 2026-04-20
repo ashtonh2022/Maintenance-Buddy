@@ -10,7 +10,7 @@ export default function Notifications() {
     let userId = "";
     if (session && session.user) {
         userId = session.user.id;
-}
+    }
 
     const {data: notifications, error, isLoading} = useNotifications(userId)
 
