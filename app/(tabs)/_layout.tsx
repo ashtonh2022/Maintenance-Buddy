@@ -15,7 +15,7 @@ export default function TabsLayout() {
   const badgeCount = Number(unreadCount ?? 0);
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs screenOptions={{ headerShown: true }}>
       <Tabs.Screen
         name="index"
         options={{

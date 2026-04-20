@@ -11,6 +11,7 @@
     "gen-types": "supabase gen types typescript --project-id zcixtbrtmkuwqlukrvsr > src/types/database.types.ts"
   },
   "dependencies": {
+    "@expo/ngrok": "^4.1.3",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.4.0",
