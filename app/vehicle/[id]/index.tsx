@@ -2,14 +2,14 @@ import { useVehicle } from "@/hooks/useVehicles";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
-import { useServiceEvents, useTimeline, useDeleteTimelineEntry, useUpdateTimelineEntry } from "@/hooks/useTimeline";
+import { useServiceEvents, useAppointments, useDeleteTimelineEntry, useUpdateTimelineEntry } from "@/hooks/useTimeline";
 import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
 
 export default function VehicleDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const { data: vehicle, isLoading: vehicleLoading } = useVehicle(id!);
-    const { data: timeline, isLoading: timelineLoading, error: timelineError } = useTimeline(id!);
     const { data: serviceEvents, isLoading: serviceEventsLoading, error: serviceEventsError } = useServiceEvents(id!);
+    const { data: appointments, isLoading: appointmentsLoading, error: appointmentsError } = useAppointments(id!);
     const deleteEntry = useDeleteTimelineEntry(id!);
     const updateEntry = useUpdateTimelineEntry(id!);
 
@@ -53,11 +53,11 @@ export default function VehicleDetail() {
                 <Text style={styles.addButtonText}>Add Service</Text>
             </Pressable>
 
-            {timelineLoading && <ActivityIndicator />}
-            {timelineError && <Text>Error loading timeline</Text>}
-            {!timelineLoading && !timelineError && timeline?.length === 0 && (<Text>No timeline entries</Text>)}
+            {serviceEventsLoading && <ActivityIndicator />}
+            {serviceEventsError && <Text>Error loading service events</Text>}
+            {!serviceEventsLoading && !serviceEventsError && serviceEvents?.length === 0 && (<Text>No service events</Text>)}
 
-            {timeline?.map((entry) => (
+            {serviceEvents?.map((entry) => (
                 <View key={entry.id} style={styles.section}>
                     <Text>{entry.service_type}</Text>
                     <Text>{entry.date}</Text>
@@ -76,15 +76,15 @@ export default function VehicleDetail() {
                 </View>
             ))}
 
-            <Text style={styles.heading}>Upcoming Apointments</Text>
+            <Text style={styles.heading}>Upcoming Appointments</Text>
 
-            {serviceEventsLoading && <ActivityIndicator />}
-            {serviceEventsError && <Text>Error loading service events</Text>}
-            {!serviceEventsLoading && !serviceEventsError && serviceEvents?.length === 0 && (
-                <Text>No upcoming Apointments</Text>
+            {appointmentsLoading && <ActivityIndicator />}
+            {appointmentsError && <Text>Error loading appointments</Text>}
+            {!appointmentsLoading && !appointmentsError && appointments?.length === 0 && (
+                <Text>No upcoming appointments</Text>
             )}
 
-            {serviceEvents?.map((entry) => (
+            {appointments?.map((entry) => (
                 <View key={entry.id} style={styles.section}>
                     <Text>{entry.service_type}</Text>
                     <Text>{entry.date}</Text>

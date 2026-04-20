@@ -1,25 +1,6 @@
-import { addTimelineEntry, deleteTimelineEntry, getTimelineEntry, updateTimelineEntry, getServiceEvents, getAllAppointments, addServiceEvent } from "@/services/timeline";
-import { timelineEntryInsert, timelineEntryRow, timelineEntryUpdate } from "@/types/types";
+import { addTimelineEntry, deleteTimelineEntry, getServiceEvents, updateTimelineEntry, getAppointments, getAllAppointments } from "@/services/timeline";
+import { timelineEntryRow, timelineEntryUpdate } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-export function useTimeline(vehicleId: string) {
-    return useQuery({
-        queryKey: ["timeline", vehicleId],
-        queryFn: () => getTimelineEntry(vehicleId),
-        enabled: !!vehicleId,
-    });
-}
-
-export function useAddServiceEvent() {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: addServiceEvent,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["serviceEvents"] });
-        },
-    });
-}
 
 export function useServiceEvents(vehicleId: string) {
     return useQuery({
@@ -29,40 +10,52 @@ export function useServiceEvents(vehicleId: string) {
     });
 }
 
-export function useAddTimelineEntry() {
+export function useAddServiceEvent() {
     const queryClient = useQueryClient();
-    
-        return useMutation({
-            mutationFn: async(timelineEntry: timelineEntryInsert): Promise<timelineEntryRow> => {
-                return await addTimelineEntry(timelineEntry);
-            },
-            onSuccess: (_, variables) => {
-                queryClient.invalidateQueries({
-                    queryKey: ["timeline", variables.vehicle_id],
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["serviceEvents", variables.vehicle_id],
-                });
-            },
-        });
+
+    return useMutation({
+        mutationFn: addTimelineEntry,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["serviceEvents"] });
+        },
+    });
+}
+
+export function useAppointments(vehicleId: string) {
+    return useQuery({
+        queryKey: ["appointments", vehicleId],
+        queryFn: () => getAppointments(vehicleId),
+        enabled: !!vehicleId,
+    });
+}
+
+export function useAddAppointment() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: addTimelineEntry,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["appointments"] });
+        },
+    });
 }
 
 export function useUpdateTimelineEntry(vehicleId: string) {
     const queryClient = useQueryClient();
-    
-        return useMutation({
-            mutationFn: async ({id, timelineEntry,}: {id: string; timelineEntry: timelineEntryUpdate;}): Promise<timelineEntryRow> => {
-                return await updateTimelineEntry(id, timelineEntry);
-            },
-            onSuccess: () => {
-                queryClient.invalidateQueries({
-                    queryKey: ["timeline", vehicleId],
-                })
-                queryClient.invalidateQueries({
-                    queryKey: ["serviceEvents", vehicleId],
-                });
-            }
-        });
+
+    return useMutation({
+        mutationFn: async ({id, timelineEntry,}: {id: string; timelineEntry: timelineEntryUpdate;}): Promise<timelineEntryRow> => {
+            return await updateTimelineEntry(id, timelineEntry);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["serviceEvents", vehicleId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["appointments", vehicleId],
+            });
+        },
+    });
 }
 
 export function useDeleteTimelineEntry(vehicleId: string) {
@@ -74,10 +67,10 @@ export function useDeleteTimelineEntry(vehicleId: string) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["timeline", vehicleId],
+                queryKey: ["serviceEvents", vehicleId],
             });
             queryClient.invalidateQueries({
-                queryKey: ["serviceEvents", vehicleId],
+                queryKey: ["appointments", vehicleId],
             });
         },
     });

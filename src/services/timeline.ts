@@ -1,16 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { timelineEntryInsert, timelineEntryRow, timelineEntryUpdate } from "@/types/types";
 
-export const addServiceEvent = async (timelineEntry: timelineEntryInsert): Promise<timelineEntryRow> => {
-    const { data, error } = await supabase
-        .from("timeline_entries")
-        .insert(timelineEntry)
-        .select()
-        .single();
-    if (error) throw error;
-    return data;
-}
-
 export const addTimelineEntry = async(timelineEntry: timelineEntryInsert): Promise<timelineEntryRow> => {
     const { data, error } = await supabase
         .from("timeline_entries")
@@ -21,7 +11,7 @@ export const addTimelineEntry = async(timelineEntry: timelineEntryInsert): Promi
     return data;
 }
 
-export const getTimelineEntry = async(vehicleId: string): Promise<timelineEntryRow[]> => {
+export const getServiceEvents = async(vehicleId: string): Promise<timelineEntryRow[]> => {
     const { data, error } = await supabase
         .from("timeline_entries")
         .select("*")
@@ -32,7 +22,7 @@ export const getTimelineEntry = async(vehicleId: string): Promise<timelineEntryR
     return data;
 }
 
-export const getServiceEvents = async (vehicleId: string): Promise<timelineEntryRow[]> => {
+export const getAppointments = async (vehicleId: string): Promise<timelineEntryRow[]> => {
     const { data, error } = await supabase
         .from("timeline_entries")
         .select("*")

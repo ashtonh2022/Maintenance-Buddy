@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
-import { useAddTimelineEntry } from "@/hooks/useTimeline";
+import { useAddAppointment } from "@/hooks/useTimeline";
 import { useLocalSearchParams, router } from "expo-router";
 
-export default function addServiceEvent() {
+export default function AddAppointment() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const addService = useAddTimelineEntry();
+    const addAppointment = useAddAppointment();
 
     const [serviceType, setServiceType] = useState("");
     const [date, setDate] = useState("");
@@ -17,7 +17,7 @@ export default function addServiceEvent() {
         if (!id || !serviceType || !date || !mileageAtService) {
             return;
         }
-        await addService.mutateAsync({
+        await addAppointment.mutateAsync({
             vehicle_id: id,
             service_type: serviceType,
             date,
