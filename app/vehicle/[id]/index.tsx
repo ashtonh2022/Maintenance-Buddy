@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
 import { useServiceEvents, useTimeline, useDeleteTimelineEntry, useUpdateTimelineEntry } from "@/hooks/useTimeline";
+import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
 
 export default function VehicleDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -64,7 +65,12 @@ export default function VehicleDetail() {
                     {entry.mileage_at_service ? <Text>Mileage: {entry.mileage_at_service}</Text> : null}
                     {entry.mechanic_shop ? <Text>Shop: {entry.mechanic_shop}</Text> : null}
 
-                    <Pressable onPress={() => deleteEntry.mutate(entry.id)}>
+                    <Pressable
+                        onPress={async () => {
+                            await deleteEntry.mutateAsync(entry.id);
+                            await deleteNotificationByVehicleAndDate(entry.vehicle_id, entry.date);
+                        }}
+                    >
                         <Text style={{ color: "red" }}>Delete</Text>
                     </Pressable>
                 </View>
@@ -86,12 +92,15 @@ export default function VehicleDetail() {
                     {entry.description ? <Text>{entry.description}</Text> : null}
                     {entry.mechanic_shop ? <Text>Shop: {entry.mechanic_shop}</Text> : null}
 
-                <Pressable onPress={() => updateEntry.mutate({
-                    id: entry.id,
-                    timelineEntry: {
-                        is_completed: true,
-                    },
-                })}>
+                <Pressable
+                    onPress={async () => {
+                        await updateEntry.mutateAsync({
+                            id: entry.id,
+                            timelineEntry: {is_completed: true,},
+                        });
+                        await deleteNotificationByVehicleAndDate(entry.vehicle_id, entry.date);
+                    }}
+                >
                     <Text>Mark Completed</Text>
                 </Pressable>
 

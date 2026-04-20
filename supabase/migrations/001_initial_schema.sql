@@ -86,6 +86,7 @@ create table notifications (
   message text not null,
   scheduled_date date not null,
   is_sent boolean not null default false,
+  is_read boolean not null default false,
   type notification_type not null,
   created_at timestamptz not null default now()
 );

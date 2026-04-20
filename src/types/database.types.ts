@@ -92,6 +92,7 @@ export type Database = {
           created_at: string
           id: string
           is_sent: boolean
+          is_read: boolean;
           message: string
           scheduled_date: string
           type: Database["public"]["Enums"]["notification_type"]
@@ -102,6 +103,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_sent?: boolean
+          is_read?: boolean;
           message: string
           scheduled_date: string
           type: Database["public"]["Enums"]["notification_type"]
@@ -112,6 +114,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_sent?: boolean
+          is_read?: boolean;
           message?: string
           scheduled_date?: string
           type?: Database["public"]["Enums"]["notification_type"]
