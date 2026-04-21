@@ -1,112 +1,27 @@
-MAINTENANCE BUDDY - TODO
-=========================
+MAINTENANCE BUDDY - MVP TODO
+=============================
 
-DATABASE
---------
-[x] Create initial schema (profiles, vehicles, maintenance_schedules, scheduled_services, timeline_entries, attachments, notifications)
-[x] Add indexes and constraints
-[x] Create vehicles_with_estimated_mileage view
-[x] Create trigger function for new user signup
-[ ] Finalize and enable RLS policies
-[ ] Seed manufacturer maintenance schedules for common makes/models
+[ ] Input validation — date pickers and number checks
+    Replace raw text inputs for dates with date pickers on add service and add appointment screens.
+    Add number validation for year, mileage, and mileage rate fields.
 
-AUTHENTICATION
---------------
-[X] Registration screen (email/password)
-[X] Login screen
-[X] Logout functionality
-[X] Password reset screen
-[X] Mileage rate prompt during onboarding (low/medium/high/custom)
-[X] Session management and auth state listener
-[ ] Protected routes (redirect unauthenticated users)
+[ ] File upload to Supabase storage
+    Wire up actual file upload to Supabase storage bucket.
+    Display uploaded photos/docs on the service event detail view.
 
-NAVIGATION & LAYOUT
---------------------
-[ ] Root layout with auth guard
-[ ] Tab navigator (dashboard, vehicles, history, settings)
-[ ] Stack navigators for sub-screens
+[ ] Maintenance due reminders
+    Use required_services + vehicle mileage + mileage rate to calculate when each service is next due.
+    Show upcoming due services on the dashboard and create notifications.
 
-DASHBOARD
----------
-[X] Dashboard screen showing all vehicles
-[X] Quick access to add vehicle
-[ ] Upcoming maintenance reminders summary
-[ ] Recent service events summary
+[ ] Update edit vehicle screen
+    Add fuel type field to the edit vehicle form.
+    Verify that save and delete actually persist to the database.
 
-VEHICLE MANAGEMENT
-------------------
-[X] Add vehicle screen (year, make, model)
-[X] Edit vehicle screen
-[X] Delete vehicle with confirmation
-[X] Vehicle detail/profile screen
-[ ] Auto-search for existing maintenance schedule when adding vehicle
-[X] Support multiple vehicles per account
+[ ] Reports / export
+    Replace the placeholder reports tab with PDF summary report and/or ZIP full report.
 
-MAINTENANCE SCHEDULES
----------------------
-[ ] Browse/search existing schedules by year/make/model
-[ ] Create custom maintenance schedule
-[ ] Schedule approval workflow (draft/pending/approved)
-[ ] Display scheduled services with mile and month intervals
+[ ] Clean up empty route files
+    Either implement or delete onboarding.tsx, service/[id].tsx, and schedule/[vehicleId].tsx.
 
-SERVICE EVENTS
---------------
-[ ] Create service event screen (date, mileage, type, description)
-[ ] Edit service event screen
-[ ] Delete service event with confirmation
-[ ] Service type options (self-service, cosmetic mod, performance mod)
-[ ] Attach photos to service event (max 3, PNG/JPEG, max 5MB each)
-[ ] Attach documents to service event (max 1 PDF/TXT, max 10MB)
-[ ] File type and size validation
-
-APPOINTMENTS
-------------
-[ ] Create appointment entry (date, time, mechanic shop, work description)
-[ ] Edit appointment
-[ ] Delete appointment
-[ ] Convert completed appointment to service event
-[ ] Appointment reminder notifications
-
-TIMELINE / HISTORY
-------------------
-[ ] Chronological timeline view per vehicle
-[ ] Show both service events and appointments
-[ ] Expand entries to view full details (miles, description, photos, documents)
-[ ] Completed appointments shown as service events on timeline
-
-MILEAGE TRACKING
-----------------
-[X] Set estimated yearly mileage rate during setup
-[ ] Update vehicle mileage manually (odometer reading)
-[ ] Estimated mileage calculation based on rate and time elapsed
-[ ] Recalculate maintenance reminders after mileage update
-
-NOTIFICATIONS
--------------
-[ ] Push notification setup (expo-notifications)
-[ ] Maintenance due notifications based on schedule vs estimated mileage
-[ ] Appointment reminder notifications
-[ ] Notification preferences/settings
-
-FILE UPLOADS
-------------
-[ ] Camera integration for photos
-[ ] Photo gallery picker
-[ ] File system picker for documents
-[ ] Upload to Supabase storage
-[ ] File validation (type, size)
-
-EXPORT / REPORTS
-----------------
-[ ] Maintenance summary export (PDF, max 30 services/3 pages, 400 chars per service, text-only)
-[ ] Full report export (ZIP archive, folders per service, includes photos/docs)
-[ ] Download/share exported file
-[ ] Error handling for insufficient storage
-
-THEMING & UI
-------------
-[ ] Implement color scheme hooks (use-color-scheme.ts, use-color-scheme.web.ts)
-[ ] Implement theme color hook (use-theme-color.ts)
-[ ] Define color palette and typography
-[ ] Responsive, mobile-friendly layouts
-[ ] Accessible font sizes
+[ ] UI polish — consistent styling across all screens
+    Consistent spacing, typography, colors, card styles, button styles, and empty states.
