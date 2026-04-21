@@ -42,6 +42,13 @@ export default function VehicleDetail() {
                 <Text style={styles.value}>{vehicle?.recent_mileage}</Text>
             </View>
 
+            <Pressable
+                style={styles.addButton}
+                onPress={() => router.push(`/requiredServices/${id}`)}
+            >
+                <Text style={styles.addButtonText}>Required Services</Text>
+            </Pressable>
+
             <Text style={styles.heading}>Service History</Text>
 
             <Pressable

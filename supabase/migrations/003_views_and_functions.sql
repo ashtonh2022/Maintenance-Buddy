@@ -80,7 +80,7 @@ BEGIN
     estimated := v.estimated_mileage;
 
     FOR svc IN
-      SELECT * FROM required_services WHERE vehicle_id = v.id
+      SELECT * FROM required_services WHERE vehicle_id = v.id AND enabled = true
     LOOP
       -- Find the mileage at the last completed service of this type
       SELECT mileage_at_service INTO last_mileage

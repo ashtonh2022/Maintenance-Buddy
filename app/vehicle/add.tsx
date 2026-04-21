@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { parseYear, parsePositiveInt } from "@/lib/validation";
+import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
 
 const FUEL_TYPES = ["petrol", "diesel", "hybrid", "electric"] as const;
 
@@ -112,30 +113,13 @@ export default function AddVehicle() {
                 </Text>
 
                 {services.map((service, index) => (
-                    <View key={index} style={styles.serviceRow}>
-                        <View style={styles.serviceHeader}>
-                            <Text style={styles.serviceName}>{service.service_name}</Text>
-                            <Pressable onPress={() => removeService(index)}>
-                                <Text style={styles.removeText}>Remove</Text>
-                            </Pressable>
-                        </View>
-                        <View style={styles.intervalRow}>
-                            <Pressable style={styles.arrowButton} onPress={() => adjustInterval(index, -5000)}>
-                                <Text style={styles.arrowText}>{"<<"}</Text>
-                            </Pressable>
-                            <Pressable style={styles.arrowButton} onPress={() => adjustInterval(index, -1000)}>
-                                <Text style={styles.arrowText}>{"<"}</Text>
-                            </Pressable>
-                            <Text style={styles.intervalText}>
-                                {service.interval_miles.toLocaleString()} mi
-                            </Text>
-                            <Pressable style={styles.arrowButton} onPress={() => adjustInterval(index, 1000)}>
-                                <Text style={styles.arrowText}>{">"}</Text>
-                            </Pressable>
-                            <Pressable style={styles.arrowButton} onPress={() => adjustInterval(index, 5000)}>
-                                <Text style={styles.arrowText}>{">>"}</Text>
-                            </Pressable>
-                        </View>
+                    <ServiceIntervalEditor
+                        key={index}
+                        serviceName={service.service_name}
+                        intervalMiles={service.interval_miles}
+                        onIntervalChange={(newInterval) => adjustInterval(index, newInterval - service.interval_miles)}
+                        onRemove={() => removeService(index)}
+                    >
                         <Pressable
                             style={styles.skipRow}
                             onPress={() => toggleSkipFirstReminder(index)}
@@ -143,7 +127,7 @@ export default function AddVehicle() {
                             <View style={[styles.checkbox, service.skip_first_reminder && styles.checkboxChecked]} />
                             <Text style={styles.skipText}>Up to date — skip first reminder</Text>
                         </Pressable>
-                    </View>
+                    </ServiceIntervalEditor>
                 ))}
 
                 <View style={styles.buttonRow}>
@@ -274,51 +258,6 @@ const styles = StyleSheet.create({
     selectedOptionText: {
         color: "#fff",
         fontWeight: "600",
-    },
-    serviceRow: {
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 12,
-    },
-    serviceHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 8,
-    },
-    serviceName: {
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    removeText: {
-        color: "red",
-        fontSize: 14,
-    },
-    intervalRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 8,
-    },
-    arrowButton: {
-        borderWidth: 1,
-        borderColor: "#2323FF",
-        borderRadius: 6,
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-    },
-    arrowText: {
-        color: "#2323FF",
-        fontWeight: "600",
-        fontSize: 16,
-    },
-    intervalText: {
-        fontSize: 16,
-        fontWeight: "600",
-        minWidth: 100,
-        textAlign: "center",
     },
     skipRow: {
         flexDirection: "row",

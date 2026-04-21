@@ -32,6 +32,7 @@ create table required_services (
   service_name text not null,
   interval_miles int not null,
   skip_first_reminder boolean not null default false,
+  enabled boolean not null default true,
   created_at timestamptz not null default now()
 );
 

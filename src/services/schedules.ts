@@ -28,10 +28,10 @@ export async function deleteRequiredService(id: string): Promise<void> {
     if (error) throw error;
 }
 
-export async function updateRequiredService(id: string, intervalMiles: number): Promise<RequiredServiceRow> {
+export async function updateRequiredService(id: string, updates: { interval_miles?: number; enabled?: boolean }): Promise<RequiredServiceRow> {
     const { data, error } = await supabase
         .from("required_services")
-        .update({ interval_miles: intervalMiles })
+        .update(updates)
         .eq("id", id)
         .select()
         .single();
