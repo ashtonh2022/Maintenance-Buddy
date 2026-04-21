@@ -5,15 +5,10 @@ export type VehicleRow = Database["public"]["Tables"]["vehicles"]["Row"];
 export type VehicleInsert = Database["public"]["Tables"]["vehicles"]["Insert"];
 export type VehicleUpdate = Database["public"]["Tables"]["vehicles"]["Update"];
 
-// Maintenance Schedules
-export type ScheduleRow = Database["public"]["Tables"]["maintenance_schedules"]["Row"];
-export type ScheduleInsert = Database["public"]["Tables"]["maintenance_schedules"]["Insert"];
-export type ScheduleUpdate = Database["public"]["Tables"]["maintenance_schedules"]["Update"];
-
-// Scheduled Services
-export type ScheduledServiceRow = Database["public"]["Tables"]["scheduled_services"]["Row"];
-export type ScheduledServiceInsert = Database["public"]["Tables"]["scheduled_services"]["Insert"];
-export type ScheduledServiceUpdate = Database["public"]["Tables"]["scheduled_services"]["Update"];
+// Required Services
+export type RequiredServiceRow = Database["public"]["Tables"]["required_services"]["Row"];
+export type RequiredServiceInsert = Database["public"]["Tables"]["required_services"]["Insert"];
+export type RequiredServiceUpdate = Database["public"]["Tables"]["required_services"]["Update"];
 
 // timelineEntry Entries
 export type timelineEntryRow = Database["public"]["Tables"]["timeline_entries"]["Row"];

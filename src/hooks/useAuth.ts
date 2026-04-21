@@ -1,4 +1,4 @@
-import { resetPassword, saveUserMileage, signIn, signOut, signUp } from "@/services/auth";
+import { resetPassword, signIn, signOut, signUp } from "@/services/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useSignIn() {
@@ -6,15 +6,7 @@ export function useSignIn() {
 }
 
 export function useSignUp() {
-    return useMutation({mutationFn: async({email, password, mileageRate}:{email: string; password: string; mileageRate: number;}) => {
-        const signUpData = await signUp(email, password, mileageRate);
-        const userId = signUpData.user?.id;
-        if (!userId) {
-            throw new Error();
-        }
-        await saveUserMileage(userId, mileageRate)
-        return signUpData;
-    },});
+    return useMutation({mutationFn: ({email, password}:{email: string; password: string}) => signUp(email, password),});
 }
 
 export function useSignOut() {

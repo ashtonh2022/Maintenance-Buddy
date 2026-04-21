@@ -20,7 +20,7 @@
   <p><strong>Team members:</strong><br>Ashton Hull, Jordan Glatz, Daniel Vincent</p>
 
   <h2>1. Purpose</h2>
-  <p>The purpose of this document is to define an outline for the requirements of Maintenance Buddy. Maintenance Buddy is a tool in the form of a mobile app that helps keep a complete maintenance log for your vehicle in one easy to access place. Users have the ability to input a multitude of information such as services performed, mileage, dates, receipts, photos, and notes. By doing this a log is created where information on your car can be easily organized. Furthermore, manufacturers provide recommended maintenance schedules based on vehicle make, model, and year, which can be used to keep users accountable. Maintenance Buddy will be a tool that will consistently help in caring for and maintaining your vehicle.</p>
+  <p>The purpose of this document is to define an outline for the requirements of Maintenance Buddy. Maintenance Buddy is a tool in the form of a mobile app that helps keep a complete maintenance log for your vehicle in one easy to access place. Users have the ability to input a multitude of information such as services performed, mileage, dates, receipts, photos, and notes. By doing this a log is created where information on your car can be easily organized. Furthermore, the app provides default maintenance schedules based on vehicle fuel type, which users can customize to keep themselves accountable. Maintenance Buddy will be a tool that will consistently help in caring for and maintaining your vehicle.</p>
 
   <h2>2. Functional Requirements</h2>
 
@@ -51,7 +51,7 @@
   <div class="entry">
     <p><strong>2.5</strong> add_vehicle</p>
     <p>Type: Functional</p>
-    <p>Summary: The system should allow users to add a car to their profile with the correct year, make, and model.</p>
+    <p>Summary: The system should allow users to add a car to their profile with the correct year, make, model, fuel type (petrol, diesel, hybrid, or electric), and yearly mileage estimate. Upon adding a vehicle, the system should present a default maintenance schedule based on the fuel type, which the user can customize by adjusting service intervals.</p>
   </div>
 
   <div class="entry">
@@ -99,7 +99,7 @@
   <div class="entry">
     <p><strong>2.13</strong> set_mileage_rate</p>
     <p>Type: Functional</p>
-    <p>Summary: When getting started, the app should prompt users to estimate their yearly mileage. Default options should be provided. The app should estimate the user's mileage based on their provided mileage rate.</p>
+    <p>Summary: When adding a vehicle, the app should prompt users to estimate their yearly mileage for that vehicle. Default options should be provided. The app should estimate each vehicle's mileage independently based on its provided mileage rate.</p>
   </div>
 
   <div class="entry">

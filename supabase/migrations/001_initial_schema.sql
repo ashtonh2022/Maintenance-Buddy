@@ -1,12 +1,13 @@
 -- Enums
 create type notification_type as enum ('maintenance_due', 'appointment_reminder');
-create type schedule_status as enum ('draft', 'pending', 'approved');
+create type fuel_type as enum ('petrol', 'diesel', 'hybrid', 'electric');
 
 -- Profiles extends Supabase auth.users
 create table profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   role text not null default 'user' check (role in ('user', 'admin')),
-  yearly_mileage_rate integer,
+  units text not null default 'imperial' check (units in ('imperial', 'metric')),
+  notifications_enabled boolean not null default true,
   created_at timestamptz not null default now()
 );
 
@@ -17,37 +18,20 @@ create table vehicles (
   year int not null,
   make text not null,
   model text not null,
+  fuel_type fuel_type not null,
   recent_mileage int not null default 0,
   mileage_rate int not null default 0,
   mileage_updated_at timestamptz not null default now(),
   created_at timestamptz not null default now()
 );
 
--- Maintenance Schedules
-create table maintenance_schedules (
+-- Required Services belong to a vehicle
+create table required_services (
   id uuid primary key default gen_random_uuid(),
-  make text not null,
-  model text not null,
-  year int not null,
-  status schedule_status not null default 'draft',
-  created_by uuid not null references profiles(id),
-  created_at timestamptz not null default now()
-);
-
--- Only one approved schedule per make/model/year
-create unique index one_approved_schedule
-  on maintenance_schedules (make, model, year)
-  where status = 'approved';
-
--- Scheduled Services belong to a schedule
-create table scheduled_services (
-  id uuid primary key default gen_random_uuid(),
-  schedule_id uuid not null references maintenance_schedules(id) on delete cascade,
+  vehicle_id uuid not null references vehicles(id) on delete cascade,
   service_name text not null,
-  interval_miles int,
-  interval_months int,
-  description text,
-  constraint has_interval check (interval_miles is not null or interval_months is not null)
+  interval_miles int not null,
+  created_at timestamptz not null default now()
 );
 
 -- Service Events (covers both completed services and upcoming appointments)
@@ -97,5 +81,5 @@ create index timeline_entries_vehicle_id on timeline_entries(vehicle_id);
 create index attachments_timeline_entry_id on attachments(timeline_entry_id);
 create index notifications_user_id on notifications(user_id);
 create index notifications_vehicle_id on notifications(vehicle_id);
-create index maintenance_schedules_lookup on maintenance_schedules(make, model, year);
+create index required_services_vehicle_id on required_services(vehicle_id);
 

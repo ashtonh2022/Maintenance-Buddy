@@ -27,7 +27,7 @@
 
   <h3>1.1 Purpose</h3>
   <p>The purpose of this document is to define an outline for Maintenance Buddy. It will focus on defining the vision of this project as well as constraints, such as time and resources. This outline will be a reference for all involved such as stakeholders, developers, and users because a clear problem will be acknowledged and solved.</p>
-  <p>Maintenance Buddy is a tool in the form of a mobile app that helps keep a complete maintenance log for your vehicle in one easy to access place. Users have the ability to input a multitude of information such as services performed, mileage, dates, receipts, photos, and notes. By doing this a log is created where information on your car can be easily organized. Furthermore, manufacturers provide recommended maintenance schedules based on vehicle make, model, and year, which can be used to keep users accountable. Maintenance Buddy will be a tool that will consistently help in caring for and maintaining your vehicle.</p>
+  <p>Maintenance Buddy is a tool in the form of a mobile app that helps keep a complete maintenance log for your vehicle in one easy to access place. Users have the ability to input a multitude of information such as services performed, mileage, dates, receipts, photos, and notes. By doing this a log is created where information on your car can be easily organized. Furthermore, the app provides default maintenance schedules based on vehicle fuel type, which users can customize to keep themselves accountable. Maintenance Buddy will be a tool that will consistently help in caring for and maintaining your vehicle.</p>
 
   <h3>1.2 Scope</h3>
   <p>Maintenance Buddy will be a mobile application that:</p>
@@ -82,7 +82,7 @@
   <ul>
     <li>Users have internet access</li>
     <li>Users Manually enter accurate Data</li>
-    <li>Manufacturer maintenance data is available</li>
+    <li>Default maintenance intervals based on fuel type are reasonable starting points for most vehicles</li>
     <li>Users have Up-to-Date Software to use application</li>
     <li>Users have correct documentation</li>
     <li>Users have Access to device features such as camera and file storage for uploading</li>
@@ -97,7 +97,7 @@
 
   <h4>Data Dependencies</h4>
   <ul>
-    <li>Manufacturer maintenance schedules based on vehicle make, model, and year</li>
+    <li>Default maintenance schedules based on vehicle fuel type, customizable per vehicle</li>
     <li>Accurate user input for mileage, dates, and services performed on the vehicle.</li>
     <li>Maintenance categories to ensure consistent logging and reporting.</li>
   </ul>
@@ -111,9 +111,8 @@
 
   <h2>5: Product features</h2>
   <ol>
-    <li>Users can enter their year, make, and model to search for an OEM maintenance schedule. Schedules for many of the most common models will be created manually by us.</li>
-    <li>Users can create a maintenance schedule for a specific year, make, and model if one does not exist already. Schedules for all other models will be community-driven. For community members to create a schedule, they must have access to the manual and be able to list it as a reference. This is so that other users can ensure the schedule's validity. Note: manuals are copyrighted content, and direct access to the manual within the app is not legal.</li>
-    <li>The app can send reminders to schedule maintenance appointments by comparing the OEM schedule and the time/mileage since last service.</li>
+    <li>When adding a vehicle, users select a fuel type (petrol, diesel, hybrid, or electric) and are presented with a default maintenance schedule based on that type. Users can customize the schedule by adjusting each service's mileage interval using increment/decrement controls (±1,000 and ±5,000 miles). Users may also add or remove services. The resulting schedule is saved as the vehicle's required services.</li>
+    <li>The app can send reminders to schedule maintenance appointments by comparing the vehicle's required services and the estimated current mileage since last service.</li>
     <li>Upon receiving a scheduling reminder, users may create appointment entries. Appointment entries do not allow you to schedule appointments within the app. Instead, they are meant to be done after the user has already scheduled the appointment externally. Appointment entries must contain a date and time for a follow-up. They may optionally contain information like "Service being performed", "Company Title", etc.</li>
     <li>When creating an appointment entry, users may quickly add information by having the app parse a screenshot of the "appointment confirmation details".</li>
     <li>When the time for a follow-up comes, the app will send a reminder letting the user know that it is time to document the service.</li>
@@ -134,7 +133,7 @@
   <ul>
     <li><strong>Time Constraints</strong>: Limited development time within the semester can lead to problems with not having enough time to fully design and test the software and may lead to restricted features.</li>
     <li><strong>Scope Risk</strong>: Too many planned features can make a project large and completed within the time limit will become a bigger issue.</li>
-    <li><strong>Maintenance Schedule availability</strong>: Scheduling for common models may be readily available but because maintenance schedules are community-driven, owners of less common models may have to wait before a maintenance schedule is available.</li>
+    <li><strong>Maintenance Schedule accuracy</strong>: Default schedules are based on general fuel type recommendations and may not match every vehicle's specific needs. Users are encouraged to adjust intervals based on their owner's manual.</li>
   </ul>
 
   <h2>9: Other product requirements</h2>

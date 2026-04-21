@@ -49,50 +49,12 @@ export type Database = {
           },
         ]
       }
-      maintenance_schedules: {
-        Row: {
-          created_at: string
-          created_by: string
-          id: string
-          make: string
-          model: string
-          status: Database["public"]["Enums"]["schedule_status"]
-          year: number
-        }
-        Insert: {
-          created_at?: string
-          created_by: string
-          id?: string
-          make: string
-          model: string
-          status?: Database["public"]["Enums"]["schedule_status"]
-          year: number
-        }
-        Update: {
-          created_at?: string
-          created_by?: string
-          id?: string
-          make?: string
-          model?: string
-          status?: Database["public"]["Enums"]["schedule_status"]
-          year?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "maintenance_schedules_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       notifications: {
         Row: {
           created_at: string
           id: string
+          is_read: boolean
           is_sent: boolean
-          is_read: boolean;
           message: string
           scheduled_date: string
           type: Database["public"]["Enums"]["notification_type"]
@@ -102,8 +64,8 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          is_read?: boolean
           is_sent?: boolean
-          is_read?: boolean;
           message: string
           scheduled_date: string
           type: Database["public"]["Enums"]["notification_type"]
@@ -113,8 +75,8 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          is_read?: boolean
           is_sent?: boolean
-          is_read?: boolean;
           message?: string
           scheduled_date?: string
           type?: Database["public"]["Enums"]["notification_type"]
@@ -136,60 +98,74 @@ export type Database = {
             referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "notifications_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles_with_estimated_mileage"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
         Row: {
           created_at: string
           id: string
+          notifications_enabled: boolean
           role: string
-          yearly_mileage_rate: number | null
+          units: string
         }
         Insert: {
           created_at?: string
           id: string
+          notifications_enabled?: boolean
           role?: string
-          yearly_mileage_rate?: number | null
+          units?: string
         }
         Update: {
           created_at?: string
           id?: string
+          notifications_enabled?: boolean
           role?: string
-          yearly_mileage_rate?: number | null
+          units?: string
         }
         Relationships: []
       }
-      scheduled_services: {
+      required_services: {
         Row: {
-          description: string | null
+          created_at: string
           id: string
-          interval_miles: number | null
-          interval_months: number | null
-          schedule_id: string
+          interval_miles: number
           service_name: string
+          vehicle_id: string
         }
         Insert: {
-          description?: string | null
+          created_at?: string
           id?: string
-          interval_miles?: number | null
-          interval_months?: number | null
-          schedule_id: string
+          interval_miles: number
           service_name: string
+          vehicle_id: string
         }
         Update: {
-          description?: string | null
+          created_at?: string
           id?: string
-          interval_miles?: number | null
-          interval_months?: number | null
-          schedule_id?: string
+          interval_miles?: number
           service_name?: string
+          vehicle_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "scheduled_services_schedule_id_fkey"
-            columns: ["schedule_id"]
+            foreignKeyName: "required_services_vehicle_id_fkey"
+            columns: ["vehicle_id"]
             isOneToOne: false
-            referencedRelation: "maintenance_schedules"
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "required_services_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles_with_estimated_mileage"
             referencedColumns: ["id"]
           },
         ]
@@ -202,12 +178,11 @@ export type Database = {
           id: string
           is_completed: boolean
           mechanic_shop: string | null
-          mileage_at_service: number | null
           mileageatservice: number | null
           service_type: string
+          tags: string[] | null
           time: string | null
           vehicle_id: string
-          tags: string[] | null
         }
         Insert: {
           created_at?: string
@@ -216,12 +191,11 @@ export type Database = {
           id?: string
           is_completed?: boolean
           mechanic_shop?: string | null
-          mileage_at_service?: number | null
           mileageatservice?: number | null
           service_type: string
+          tags?: string[] | null
           time?: string | null
           vehicle_id: string
-          tags?: string[] | null
         }
         Update: {
           created_at?: string
@@ -230,12 +204,11 @@ export type Database = {
           id?: string
           is_completed?: boolean
           mechanic_shop?: string | null
-          mileage_at_service?: number | null
           mileageatservice?: number | null
           service_type?: string
+          tags?: string[] | null
           time?: string | null
           vehicle_id?: string
-          tags?: string[] | null
         }
         Relationships: [
           {
@@ -245,11 +218,19 @@ export type Database = {
             referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "timeline_entries_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles_with_estimated_mileage"
+            referencedColumns: ["id"]
+          },
         ]
       }
       vehicles: {
         Row: {
           created_at: string
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
           id: string
           make: string
           mileage_rate: number
@@ -261,6 +242,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          fuel_type: Database["public"]["Enums"]["fuel_type"]
           id?: string
           make: string
           mileage_rate?: number
@@ -272,6 +254,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          fuel_type?: Database["public"]["Enums"]["fuel_type"]
           id?: string
           make?: string
           mileage_rate?: number
@@ -293,14 +276,63 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      vehicles_with_estimated_mileage: {
+        Row: {
+          created_at: string | null
+          estimated_mileage: number | null
+          fuel_type: Database["public"]["Enums"]["fuel_type"] | null
+          id: string | null
+          make: string | null
+          mileage_rate: number | null
+          mileage_updated_at: string | null
+          model: string | null
+          recent_mileage: number | null
+          user_id: string | null
+          year: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          estimated_mileage?: never
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          id?: string | null
+          make?: string | null
+          mileage_rate?: number | null
+          mileage_updated_at?: string | null
+          model?: string | null
+          recent_mileage?: number | null
+          user_id?: string | null
+          year?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          estimated_mileage?: never
+          fuel_type?: Database["public"]["Enums"]["fuel_type"] | null
+          id?: string | null
+          make?: string | null
+          mileage_rate?: number | null
+          mileage_updated_at?: string | null
+          model?: string | null
+          recent_mileage?: number | null
+          user_id?: string | null
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
     }
     Enums: {
+      fuel_type: "petrol" | "diesel" | "hybrid" | "electric"
       notification_type: "maintenance_due" | "appointment_reminder"
-      schedule_status: "draft" | "pending" | "approved"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -428,8 +460,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      fuel_type: ["petrol", "diesel", "hybrid", "electric"],
       notification_type: ["maintenance_due", "appointment_reminder"],
-      schedule_status: ["draft", "pending", "approved"],
     },
   },
 } as const

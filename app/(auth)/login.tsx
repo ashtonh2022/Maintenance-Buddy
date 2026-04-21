@@ -55,6 +55,10 @@ export default function Login() {
             </Text>
         </Pressable>
 
+        <Pressable onPress={() => router.push("/(auth)/reset-password")}>
+            <Text style={styles.link}>Forgot Password?</Text>
+        </Pressable>
+
         <Pressable onPress={() => router.push("/register")}>
             <Text style={styles.link}>Need an account? Sign up</Text>
         </Pressable>
