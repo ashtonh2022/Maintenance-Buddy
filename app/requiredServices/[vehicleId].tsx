@@ -3,10 +3,12 @@ import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text } from "react-native";
 import { useRequiredServices, useUpdateRequiredService } from "@/hooks/useRequiredServices";
 import { useServiceEvents } from "@/hooks/useTimeline";
+import { useVehicle } from "@/hooks/useVehicles";
 import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
 
 export default function RequiredServicesPage() {
     const { vehicleId } = useLocalSearchParams<{ vehicleId: string }>();
+    const { data: vehicle } = useVehicle(vehicleId!);
     const { data: services, isLoading: servicesLoading } = useRequiredServices(vehicleId!);
     const { data: serviceEvents } = useServiceEvents(vehicleId!);
     const updateService = useUpdateRequiredService(vehicleId!);
@@ -37,7 +39,8 @@ export default function RequiredServicesPage() {
 
             {services?.map((service) => {
                 const lastMileage = getLastMileage(service.service_name);
-                const dueAt = (lastMileage !== null ? lastMileage : 0) + service.interval_miles;
+                const currentMileage = vehicle?.recent_mileage ?? 0;
+                const dueAt = (lastMileage !== null ? lastMileage : currentMileage) + service.interval_miles;
 
                 return (
                     <ServiceIntervalEditor
@@ -57,7 +60,7 @@ export default function RequiredServicesPage() {
                             Due at: {dueAt.toLocaleString()} mi
                             {lastMileage !== null
                                 ? ` (last serviced at ${lastMileage.toLocaleString()} mi)`
-                                : " (no service history)"}
+                                : ` (current mileage: ${currentMileage.toLocaleString()} mi)`}
                         </Text>
                     </ServiceIntervalEditor>
                 );
