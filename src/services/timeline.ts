@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { timelineEntryInsert, timelineEntryRow, timelineEntryUpdate } from "@/types/types";
+import { timelineEntryInsert, timelineEntryRow, timelineEntryUpdate, AttachmentRow } from "@/types/types";
 
 export const addTimelineEntry = async(timelineEntry: timelineEntryInsert): Promise<timelineEntryRow> => {
     const { data, error } = await supabase
@@ -71,3 +71,19 @@ export const getAllAppointments = async (): Promise<timelineEntryRow[]> => {
     if (error) throw error;
     return data;
 };
+
+export type TimelineEntryWithAttachments = timelineEntryRow & {
+    attachments?: AttachmentRow[];
+};
+
+export const getTimelineEntry = async (id: string): Promise<TimelineEntryWithAttachments> => {
+    const { data, error } = await supabase
+        .from("timeline_entries")
+        .select(`*,attachments (*)`)
+        .eq("id", id)
+        .single();
+    if (error) throw error;
+    return data;
+};
+
+

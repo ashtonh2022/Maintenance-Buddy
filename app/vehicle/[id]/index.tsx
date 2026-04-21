@@ -63,7 +63,10 @@ export default function VehicleDetail() {
             {!serviceEventsLoading && !serviceEventsError && serviceEvents?.length === 0 && (<Text>No service events</Text>)}
 
             {serviceEvents?.map((entry) => (
-                <View key={entry.id} style={styles.section}>
+                <Pressable
+                    key={entry.id} style={styles.section}
+                    onPress={() => router.push(`/service/${entry.id}`)}
+                >
                     <Text>{entry.service_type}</Text>
                     <Text>{entry.date}</Text>
                     {entry.description ? <Text>{entry.description}</Text> : null}
@@ -78,7 +81,7 @@ export default function VehicleDetail() {
                     >
                         <Text style={{ color: "red" }}>Delete</Text>
                     </Pressable>
-                </View>
+                </Pressable>
             ))}
 
             <Text style={styles.heading}>Upcoming Appointments</Text>
@@ -179,9 +182,14 @@ const styles = StyleSheet.create({
     },
     section: {
         marginBottom: 12,
+        padding: 12,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 10,
+        backgroundColor: "#f9f9f9",
     },
     addButton: {
-    marginBottom: 16,
+        marginBottom: 16,
     },
     addButtonText: {
         fontSize: 16,

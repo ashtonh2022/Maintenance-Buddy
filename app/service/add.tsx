@@ -9,6 +9,7 @@ import { formatDate, parsePositiveInt } from "@/lib/validation";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import { supabase } from "@/lib/supabase";
 
 export default function AddService() {
     const { id, appointmentId } = useLocalSearchParams<{ id: string; appointmentId?: string }>();
@@ -37,6 +38,7 @@ export default function AddService() {
     }, [appointmentId]);
     const [photoFile, setPhotoFile] = useState<any>(null);
     const [documentFile, setDocumentFile] = useState<any>(null);
+    const [time, setTime] = useState("");
 
     const toggleTag = (tag: string) => {
         let newTags: string[] = [];
@@ -84,6 +86,24 @@ export default function AddService() {
         }
     };
 
+    async function uploadFileToStorage(uri: string, folder: string, defaultName: string, contentType: string) {
+        const fileName = uri.split("/").pop() ?? defaultName;
+        const filePath = folder + "/" + Date.now() + "-" + fileName;
+
+        const response = await fetch(uri);
+        const arrayBuffer = await response.arrayBuffer();
+
+        const { error } = await supabase.storage
+            .from("attachments")
+            .upload(filePath, arrayBuffer, {
+                contentType: contentType,
+            });
+        if (error) {
+            throw error;
+        }
+        return filePath;
+    }
+
     const handleSubmit = async () => {
         if (!serviceType) {
             Alert.alert("Error", "Please enter a service type");
@@ -129,24 +149,50 @@ export default function AddService() {
         }
 
         if (photoFile) {
+            let photoType = photoFile.mimeType ?? "image/jpeg";
+
+            if (photoType.startsWith("text/plain")) {
+                photoType = "image/jpeg";
+            }
+
+            const uploadedPhotoPath = await uploadFileToStorage(
+                photoFile.uri,
+                "service-photos",
+                "photo.jpg",
+                photoType
+            );
+
             await addAttachment.mutateAsync({
-                timeline_entry_id: entryId,
-                file_path: photoFile.uri,
+                timeline_entry_id: newEntry.id,
+                file_path: uploadedPhotoPath,
                 file_size: photoFile.fileSize ?? 0,
                 file_type: photoFile.mimeType ?? "image/jpeg",
             });
         }
 
         if (documentFile) {
+            let docType = documentFile.mimeType ?? "application/pdf";
+
+            if (docType.startsWith("text/plain")) {
+                docType = "text/plain";
+            }
+
+            const uploadedDocPath = await uploadFileToStorage(
+                documentFile.uri,
+                "service-docs",
+                "document.pdf",
+                docType
+            );
+
             await addAttachment.mutateAsync({
-                timeline_entry_id: entryId,
-                file_path: documentFile.uri,
+                timeline_entry_id: newEntry.id,
+                file_path: uploadedDocPath,
                 file_size: documentFile.size ?? 0,
                 file_type: documentFile.mimeType ?? "application/pdf",
             });
-        }
+        };
         router.back();
-    };
+    }
 
     return (
         <View style={{ padding: 20 }}>

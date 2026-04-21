@@ -1,4 +1,4 @@
-import { addTimelineEntry, deleteTimelineEntry, getServiceEvents, updateTimelineEntry, getAppointments, getAllAppointments } from "@/services/timeline";
+import { addTimelineEntry, deleteTimelineEntry, getServiceEvents, updateTimelineEntry, getAppointments, getAllAppointments, getTimelineEntry } from "@/services/timeline";
 import { timelineEntryRow, timelineEntryUpdate } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -80,5 +80,13 @@ export function useAllAppointments() {
     return useQuery({
         queryKey: ["allAppointments"],
         queryFn: getAllAppointments,
+    });
+}
+
+export function useTimelineEntry(id: string) {
+    return useQuery({
+        queryKey: ["timelineEntry", id],
+        queryFn: () => getTimelineEntry(id),
+        enabled: !!id,
     });
 }
