@@ -178,7 +178,7 @@ export type Database = {
           id: string
           is_completed: boolean
           mechanic_shop: string | null
-          mileageatservice: number | null
+          mileage_at_service: number | null
           service_type: string
           tags: string[] | null
           time: string | null
@@ -191,7 +191,7 @@ export type Database = {
           id?: string
           is_completed?: boolean
           mechanic_shop?: string | null
-          mileageatservice?: number | null
+          mileage_at_service?: number | null
           service_type: string
           tags?: string[] | null
           time?: string | null
@@ -204,7 +204,7 @@ export type Database = {
           id?: string
           is_completed?: boolean
           mechanic_shop?: string | null
-          mileageatservice?: number | null
+          mileage_at_service?: number | null
           service_type?: string
           tags?: string[] | null
           time?: string | null

@@ -17,8 +17,8 @@ MAINTENANCE BUDDY - MVP TODO
     Add fuel type field to the edit vehicle form.
     Verify that save and delete actually persist to the database.
 
-[ ] Reports / export
-    Replace the placeholder reports tab with PDF summary report and/or ZIP full report.
+[ ] Reports / export — verify functionality
+    Reports screen and hooks exist. Test that TXT, PDF, DOCX, and ZIP exports work end to end.
 
 [ ] Clean up empty route files
     Either implement or delete onboarding.tsx, service/[id].tsx, and schedule/[vehicleId].tsx.

@@ -42,7 +42,7 @@ create table timeline_entries (
   time time,
   service_type text not null,
   description text,
-  mileageAtService int,
+  mileage_at_service int,
   mechanic_shop text,
   tags text[] default '{}',
   is_completed boolean not null default false,

@@ -1,38 +1,12 @@
 import { useVehicles } from "@/hooks/useVehicles";
 import { router } from "expo-router";
-import React, { useEffect } from "react";
+import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useAllAppointments } from "@/hooks/useTimeline";
-import { checkAppointmentReminders } from "@/services/notifications";
-import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
     const { data: vehicles, isLoading, error } = useVehicles();
     const { data: appointments, isLoading: appointmentsLoading, error: appointmentsError } = useAllAppointments();
-
-    const { session } = useAuth();
-    let userId = "";
-    if (session && session.user) {
-        userId = session.user.id;
-    }
-
-    useEffect(() => {
-        if (userId === "" || vehicles == null) {
-            return;
-        }
-
-        const runCheck = async () => {
-            for (let i = 0; i < vehicles.length; i++) {
-                const vehicle = vehicles[i];
-                try {
-                    await checkAppointmentReminders(userId, vehicle.id);
-                } catch (error) {
-                    console.log("Reminder error:", error);
-                }
-            }
-        }
-        runCheck();
-    }, [userId, vehicles]);
 
     return (
         <View style={styles.container}>

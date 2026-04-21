@@ -10,9 +10,13 @@ const noopStorage = {
   removeItem: () => Promise.resolve(),
 };
 
+console.log('URL:', process.env.EXPO_PUBLIC_SUPABASE_URL);
+console.log('KEY exists:', !!process.env.EXPO_PUBLIC_SUPABASE_KEY);
+
 export const supabase = createClient<Database>(
   process.env.EXPO_PUBLIC_SUPABASE_URL!,
   process.env.EXPO_PUBLIC_SUPABASE_KEY!,
+
   {
     auth: {
       storage: isServer ? noopStorage : AsyncStorage,
