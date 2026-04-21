@@ -33,6 +33,16 @@ export const getAppointments = async (vehicleId: string): Promise<timelineEntryR
     return data;
 };
 
+export const getTimelineEntryById = async(id: string): Promise<timelineEntryRow> => {
+    const { data, error } = await supabase
+        .from("timeline_entries")
+        .select("*")
+        .eq("id", id)
+        .single();
+    if (error) throw error;
+    return data;
+}
+
 export const updateTimelineEntry = async(id: string, timelineEntry: timelineEntryUpdate): Promise<timelineEntryRow> => {
     const { data, error } = await supabase
         .from("timeline_entries")

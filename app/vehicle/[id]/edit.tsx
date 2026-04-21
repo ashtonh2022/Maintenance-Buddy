@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { parseYear, parsePositiveInt } from "@/lib/validation";
 
 //variables
 export default function EditVehicle() {
@@ -28,9 +29,16 @@ export default function EditVehicle() {
 
     //function for button
     const handleSaveChanges = async() => {
-        //if user leaves any fields empty
         if (!make || !model || !year || !mileage) {
             Alert.alert("Error", "Please fill in all fields");
+            return;
+        }
+        if (parseYear(year) === null) {
+            Alert.alert("Error", "Please enter a valid year (1900 - " + (new Date().getFullYear() + 1) + ")");
+            return;
+        }
+        if (parsePositiveInt(mileage) === null) {
+            Alert.alert("Error", "Mileage must be a positive number");
             return;
         }
 
@@ -39,8 +47,8 @@ export default function EditVehicle() {
             id: String(id),
             make,
             model,
-            year: Number(year),
-            recent_mileage: Number(mileage),
+            year: parseYear(year)!,
+            recent_mileage: parsePositiveInt(mileage)!,
         });
 
         Alert.alert("Success", "Vehicle Updated", [

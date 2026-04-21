@@ -1,3 +1,8 @@
+-- Enable pg_cron for scheduled jobs
+CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
+
+-----------------------------------------------------------
+
 -- Trigger: Automatically creates a profile when a new user signs up
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -86,8 +91,11 @@ BEGIN
       ORDER BY date DESC
       LIMIT 1;
 
-      -- If never serviced, assume 0
+      -- If never serviced, skip if user opted out of first reminder
       IF last_mileage IS NULL THEN
+        IF svc.skip_first_reminder THEN
+          CONTINUE;
+        END IF;
         last_mileage := 0;
       END IF;
 

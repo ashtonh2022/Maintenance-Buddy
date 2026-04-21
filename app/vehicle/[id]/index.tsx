@@ -2,8 +2,7 @@ import { useVehicle } from "@/hooks/useVehicles";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
-import { useServiceEvents, useAppointments, useDeleteTimelineEntry, useUpdateTimelineEntry } from "@/hooks/useTimeline";
-import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
+import { useServiceEvents, useAppointments, useDeleteTimelineEntry } from "@/hooks/useTimeline";
 
 export default function VehicleDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -11,7 +10,6 @@ export default function VehicleDetail() {
     const { data: serviceEvents, isLoading: serviceEventsLoading, error: serviceEventsError } = useServiceEvents(id!);
     const { data: appointments, isLoading: appointmentsLoading, error: appointmentsError } = useAppointments(id!);
     const deleteEntry = useDeleteTimelineEntry(id!);
-    const updateEntry = useUpdateTimelineEntry(id!);
 
     if (vehicleLoading) return <ActivityIndicator style={styles.container} />;
     
@@ -93,13 +91,7 @@ export default function VehicleDetail() {
                     {entry.mechanic_shop ? <Text>Shop: {entry.mechanic_shop}</Text> : null}
 
                 <Pressable
-                    onPress={async () => {
-                        await updateEntry.mutateAsync({
-                            id: entry.id,
-                            timelineEntry: {is_completed: true,},
-                        });
-                        await deleteNotificationByVehicleAndDate(entry.vehicle_id, entry.date);
-                    }}
+                    onPress={() => router.push(`/service/add?id=${id}&appointmentId=${entry.id}`)}
                 >
                     <Text>Mark Completed</Text>
                 </Pressable>

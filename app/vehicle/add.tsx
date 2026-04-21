@@ -4,6 +4,7 @@ import { DEFAULT_SCHEDULES, DefaultService, addRequiredServices } from "@/servic
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { parseYear, parsePositiveInt } from "@/lib/validation";
 
 const FUEL_TYPES = ["petrol", "diesel", "hybrid", "electric"] as const;
 
@@ -29,6 +30,18 @@ export default function AddVehicle() {
             Alert.alert("Error", "Please fill in all fields");
             return;
         }
+        if (parseYear(year) === null) {
+            Alert.alert("Error", "Please enter a valid year (1900 - " + (new Date().getFullYear() + 1) + ")");
+            return;
+        }
+        if (parsePositiveInt(mileage) === null) {
+            Alert.alert("Error", "Mileage must be a positive number");
+            return;
+        }
+        if (parsePositiveInt(mileageRate) === null) {
+            Alert.alert("Error", "Yearly mileage must be a positive number");
+            return;
+        }
         setServices([...DEFAULT_SCHEDULES[fuelType]]);
         setStep(2);
     };
@@ -44,6 +57,14 @@ export default function AddVehicle() {
         });
     };
 
+    const toggleSkipFirstReminder = (index: number) => {
+        setServices(prev => {
+            const updated = [...prev];
+            updated[index] = { ...updated[index], skip_first_reminder: !updated[index].skip_first_reminder };
+            return updated;
+        });
+    };
+
     const removeService = (index: number) => {
         setServices(prev => prev.filter((_, i) => i !== index));
     };
@@ -55,10 +76,10 @@ export default function AddVehicle() {
             const newVehicle = await addVehicle.mutateAsync({
                 make,
                 model,
-                year: Number(year),
-                recent_mileage: Number(mileage),
+                year: parseYear(year)!,
+                recent_mileage: parsePositiveInt(mileage)!,
                 fuel_type: fuelType as any,
-                mileage_rate: Number(mileageRate),
+                mileage_rate: parsePositiveInt(mileageRate)!,
                 user_id: session.user.id,
             });
 
@@ -68,6 +89,7 @@ export default function AddVehicle() {
                         vehicle_id: newVehicle.id,
                         service_name: s.service_name,
                         interval_miles: s.interval_miles,
+                        skip_first_reminder: s.skip_first_reminder,
                     }))
                 );
             }
@@ -114,6 +136,13 @@ export default function AddVehicle() {
                                 <Text style={styles.arrowText}>{">>"}</Text>
                             </Pressable>
                         </View>
+                        <Pressable
+                            style={styles.skipRow}
+                            onPress={() => toggleSkipFirstReminder(index)}
+                        >
+                            <View style={[styles.checkbox, service.skip_first_reminder && styles.checkboxChecked]} />
+                            <Text style={styles.skipText}>Up to date — skip first reminder</Text>
+                        </Pressable>
                     </View>
                 ))}
 
@@ -290,6 +319,26 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         minWidth: 100,
         textAlign: "center",
+    },
+    skipRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 8,
+        gap: 8,
+    },
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderWidth: 2,
+        borderColor: "#2323FF",
+        borderRadius: 4,
+    },
+    checkboxChecked: {
+        backgroundColor: "#2323FF",
+    },
+    skipText: {
+        fontSize: 14,
+        color: "#666",
     },
     buttonRow: {
         flexDirection: "row",

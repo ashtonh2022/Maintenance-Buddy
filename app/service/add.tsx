@@ -1,21 +1,40 @@
-import { useAddServiceEvent } from "@/hooks/useTimeline";
+import { useAddServiceEvent, useUpdateTimelineEntry } from "@/hooks/useTimeline";
+import { getTimelineEntryById } from "@/services/timeline";
+import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
 import { useLocalSearchParams, router } from "expo-router";
-import React, { useState } from "react";
-import { Button, Text, TextInput, View, Pressable, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Platform, Text, TextInput, View, Pressable, StyleSheet } from "react-native";
 import { useAddAttachment } from "@/hooks/useAttachment";
+import { formatDate, parsePositiveInt } from "@/lib/validation";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 
 export default function AddService() {
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { id, appointmentId } = useLocalSearchParams<{ id: string; appointmentId?: string }>();
     const addServiceEvent = useAddServiceEvent();
+    const updateEntry = useUpdateTimelineEntry(id!);
     const addAttachment = useAddAttachment();
+    const isCompleting = !!appointmentId;
 
-    const [date, setDate] = useState("");
-    const [mileage_at_service, setMileage] = useState("");
+    const [date, setDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [mileageAtService, setMileage] = useState("");
     const [serviceType, setServiceType] = useState("");
+    const [mechanicShop, setMechanicShop] = useState("");
     const [description, setDescription] = useState("");
     const [tags, setTags] = useState<string[]>([]);
+
+    // Pre-fill from appointment if completing one
+    useEffect(() => {
+        if (!appointmentId) return;
+        getTimelineEntryById(appointmentId).then((entry) => {
+            setServiceType(entry.service_type);
+            setDate(new Date(entry.date));
+            if (entry.mechanic_shop) setMechanicShop(entry.mechanic_shop);
+            if (entry.description) setDescription(entry.description);
+        });
+    }, [appointmentId]);
     const [photoFile, setPhotoFile] = useState<any>(null);
     const [documentFile, setDocumentFile] = useState<any>(null);
 
@@ -66,19 +85,52 @@ export default function AddService() {
     };
 
     const handleSubmit = async () => {
-        const newEntry = await addServiceEvent.mutateAsync({
-            vehicle_id: id,
-            date,
-            mileage_at_service: mileage_at_service ? Number(mileage_at_service) : null,
-            service_type: serviceType,
-            description,
-            tags,
-            is_completed: true,
-        });
+        if (!serviceType) {
+            Alert.alert("Error", "Please enter a service type");
+            return;
+        }
+
+        if (mileageAtService && parsePositiveInt(mileageAtService) === null) {
+            Alert.alert("Error", "Mileage must be a positive number");
+            return;
+        }
+
+        let entryId: string;
+
+        if (isCompleting) {
+            // Update existing appointment to mark as completed service event
+            const updated = await updateEntry.mutateAsync({
+                id: appointmentId!,
+                timelineEntry: {
+                    date: formatDate(date),
+                    mileage_at_service: mileageAtService ? parsePositiveInt(mileageAtService) : null,
+                    service_type: serviceType,
+                    mechanic_shop: mechanicShop || null,
+                    description,
+                    tags,
+                    is_completed: true,
+                },
+            });
+            entryId = updated.id;
+            await deleteNotificationByVehicleAndDate(id!, formatDate(date));
+        } else {
+            // Create new service event
+            const newEntry = await addServiceEvent.mutateAsync({
+                vehicle_id: id,
+                date: formatDate(date),
+                mileage_at_service: mileageAtService ? parsePositiveInt(mileageAtService) : null,
+                service_type: serviceType,
+                mechanic_shop: mechanicShop || null,
+                description,
+                tags,
+                is_completed: true,
+            });
+            entryId = newEntry.id;
+        }
 
         if (photoFile) {
             await addAttachment.mutateAsync({
-                timeline_entry_id: newEntry.id,
+                timeline_entry_id: entryId,
                 file_path: photoFile.uri,
                 file_size: photoFile.fileSize ?? 0,
                 file_type: photoFile.mimeType ?? "image/jpeg",
@@ -87,7 +139,7 @@ export default function AddService() {
 
         if (documentFile) {
             await addAttachment.mutateAsync({
-                timeline_entry_id: newEntry.id,
+                timeline_entry_id: entryId,
                 file_path: documentFile.uri,
                 file_size: documentFile.size ?? 0,
                 file_type: documentFile.mimeType ?? "application/pdf",
@@ -98,10 +150,24 @@ export default function AddService() {
 
     return (
         <View style={{ padding: 20 }}>
-            <TextInput placeholder="Date" value={date} onChangeText={setDate} />
-            <TextInput placeholder="Mileage" value={mileage_at_service} onChangeText={setMileage} />
-            <TextInput placeholder="Service Type" value={serviceType} onChangeText={setServiceType} />
-            <TextInput placeholder="Description" value={description} onChangeText={setDescription} />
+            <Text style={styles.label}>Date</Text>
+            <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+                <Text>{formatDate(date)}</Text>
+            </Pressable>
+            {showDatePicker && (
+                <DateTimePicker
+                    value={date}
+                    mode="date"
+                    onChange={(_, selected) => {
+                        setShowDatePicker(Platform.OS === "ios");
+                        if (selected) setDate(selected);
+                    }}
+                />
+            )}
+            <TextInput style={styles.input} placeholder="Mileage (optional)" value={mileageAtService} onChangeText={setMileage} keyboardType="numeric" />
+            <TextInput style={styles.input} placeholder="Service Type" value={serviceType} onChangeText={setServiceType} />
+            <TextInput style={styles.input} placeholder="Mechanic Shop (optional)" value={mechanicShop} onChangeText={setMechanicShop} />
+            <TextInput style={styles.input} placeholder="Description (optional)" value={description} onChangeText={setDescription} />
 
             <Text style={styles.label}>Tags</Text>
             <View style={styles.tagRow}>
@@ -141,12 +207,26 @@ export default function AddService() {
             </Text>
         </Pressable>
 
-        <Button title="Save Service Event" onPress={handleSubmit} />
+        <Button title={isCompleting ? "Complete Appointment" : "Save Service Event"} onPress={handleSubmit} />
         </View>
     );
     
 }
 const styles = StyleSheet.create({
+    input: {
+        borderWidth: 1,
+        borderColor: "#2323FF",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 12,
+    },
+    dateButton: {
+        borderWidth: 1,
+        borderColor: "#2323FF",
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 12,
+    },
     label: {
         fontSize: 16,
         fontWeight: "600",

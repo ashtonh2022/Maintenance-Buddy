@@ -38,7 +38,7 @@ export function useUpdateVehicle() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (vehicle: VehicleUpdate) => updateVehicle(vehicle),
+        mutationFn: ({ id, ...vehicle }: VehicleUpdate & { id: string }) => updateVehicle(id, vehicle),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ["vehicles"] });
             queryClient.invalidateQueries({ queryKey: ["vehicle", variables.id] });

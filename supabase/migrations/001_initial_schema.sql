@@ -31,6 +31,7 @@ create table required_services (
   vehicle_id uuid not null references vehicles(id) on delete cascade,
   service_name text not null,
   interval_miles int not null,
+  skip_first_reminder boolean not null default false,
   created_at timestamptz not null default now()
 );
 

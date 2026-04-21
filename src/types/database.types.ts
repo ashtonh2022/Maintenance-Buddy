@@ -137,6 +137,7 @@ export type Database = {
           id: string
           interval_miles: number
           service_name: string
+          skip_first_reminder: boolean
           vehicle_id: string
         }
         Insert: {
@@ -144,6 +145,7 @@ export type Database = {
           id?: string
           interval_miles: number
           service_name: string
+          skip_first_reminder?: boolean
           vehicle_id: string
         }
         Update: {
@@ -151,6 +153,7 @@ export type Database = {
           id?: string
           interval_miles?: number
           service_name?: string
+          skip_first_reminder?: boolean
           vehicle_id?: string
         }
         Relationships: [
@@ -328,7 +331,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      check_notifications: { Args: never; Returns: undefined }
     }
     Enums: {
       fuel_type: "petrol" | "diesel" | "hybrid" | "electric"
