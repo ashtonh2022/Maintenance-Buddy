@@ -45,10 +45,12 @@ export default function EditVehicle() {
         try {
         await updateVehicleMutation.mutateAsync({
             id: String(id),
-            make,
-            model,
-            year: parseYear(year)!,
-            recent_mileage: parsePositiveInt(mileage)!,
+            vehicle: {
+                make,
+                model,
+                year: parseYear(year)!,
+                recent_mileage: parsePositiveInt(mileage)!,
+            }
         });
 
         Alert.alert("Success", "Vehicle Updated", [

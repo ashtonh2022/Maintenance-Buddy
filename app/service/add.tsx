@@ -163,7 +163,7 @@ export default function AddService() {
             );
 
             await addAttachment.mutateAsync({
-                timeline_entry_id: newEntry.id,
+                timeline_entry_id: entryId,
                 file_path: uploadedPhotoPath,
                 file_size: photoFile.fileSize ?? 0,
                 file_type: photoFile.mimeType ?? "image/jpeg",
@@ -185,7 +185,7 @@ export default function AddService() {
             );
 
             await addAttachment.mutateAsync({
-                timeline_entry_id: newEntry.id,
+                timeline_entry_id: entryId,
                 file_path: uploadedDocPath,
                 file_size: documentFile.size ?? 0,
                 file_type: documentFile.mimeType ?? "application/pdf",
