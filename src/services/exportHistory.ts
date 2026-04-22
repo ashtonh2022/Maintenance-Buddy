@@ -1,137 +1,31 @@
 import { File, Paths, Directory } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 import { zip } from "react-native-zip-archive";
 import { supabase } from "@/lib/supabase";
 import { VehicleRow, timelineEntryRow, AttachmentRow } from "@/types/types";
 
-type VehicleWithTimeline = VehicleRow & {
-    timeline_entries?: timelineEntryRow[];
-};
-
-//builds TXT file for one vehicle
-function buildVehicleSummaryText(vehicle: VehicleWithTimeline) {
-    let lines: string[] = [];
-
-    lines.push("Maintenance Buddy Summary Report");
-    lines.push("Exported: " + new Date().toLocaleString());
-    lines.push("");
-
-    lines.push("Vehicle: " + vehicle.year + " " + vehicle.make + " " + vehicle.model);
-    lines.push("Current Mileage: " + (vehicle.recent_mileage ?? "N/A"));
-    lines.push("");
-
-    let services = vehicle.timeline_entries;
-    if (!services) {
-        services = [];
-    }
-
-    if (services.length === 0) {
-        lines.push("No service history found.");
-        return lines.join("\n");
-    }
-
-    const sorted = [...services].sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
-
-    const last30 = sorted.slice(0, 30);
-
-    for (let i = 0; i < last30.length; i++) {
-        const s = last30[i];
-
-        lines.push("Service " + (i + 1));
-        lines.push("Date: " + s.date);
-        lines.push("Service Type: " + s.service_type);
-        lines.push("Mileage: " + (s.mileage_at_service ?? "N/A"));
-        lines.push("Mechanic Shop: " + (s.mechanic_shop ?? "N/A"));
-        lines.push("Completed: " + (s.is_completed ? "Yes" : "No"));
-        lines.push("Description: " + (s.description ?? "N/A"));
-        lines.push("");
-    }
-    return lines.join("\n");
+function isImage(fileType?: string) {
+    return fileType?.startsWith("image/");
 }
 
-//builds TXT file for all vehicles
-function buildAllVehiclesSummaryText(vehicles: VehicleWithTimeline[]) {
-    let lines: string[] = [];
-
-    lines.push("Maintenance Buddy Summary Report");
-    lines.push("Exported: " + new Date().toLocaleString());
-    lines.push("Total Vehicles: " + vehicles.length);
-    lines.push("");
-
-    if (vehicles.length === 0) {
-        lines.push("No vehicles found.");
-        return lines.join("\n");
-    }
-
-    for (let i = 0; i < vehicles.length; i++) {
-        const v = vehicles[i];
-
-        lines.push("Vehicle " + (i + 1));
-        lines.push(buildVehicleSummaryText(v));
-        lines.push("");
-    }
-    return lines.join("\n");
-}
-
-//file name for TXT file
-function makeFileName(vehicle: VehicleWithTimeline) {
-    let name = vehicle.year + "-" + vehicle.make + "-" + vehicle.model + "-summary.txt";
-    name = name.replace(/\s+/g, "-").toLowerCase();
+function getFileName(path: string) {
+    let name = path.split("/").pop() || "file";
+    name = name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
     return name;
 }
 
-//shares TXT file to user
-async function saveAndShare(fileName: string, content: string) {
-    const file = new File(Paths.cache, fileName);
-    file.write(content);
-    const canShare = await Sharing.isAvailableAsync();
-    if (!canShare) {
-        throw new Error("Sharing not available");
-    }
-    await Sharing.shareAsync(file.uri);
-}
+type VehicleWithTimeline = VehicleRow & {
+    timeline_entries?: TimelineEntryWithAttachments[];
+};
 
-//function for TXT file for all vehicles
-export async function exportSummaryTxtAllVehicles(userId: string) {
-    const { data, error } = await supabase
-        .from("vehicles")
-        .select(`*, timeline_entries (*)`)
-        .eq("user_id", userId);
-    if (error) {
-        throw error;
-    }
-    const vehicles = (data ?? []) as VehicleWithTimeline[];
-
-    const text = buildAllVehiclesSummaryText(vehicles);
-
-    await saveAndShare("all-vehicles-summary.txt", text);
-}
-
-//function for TXT file for one vehicle
-export async function exportSummaryTxtVehicle(vehicleId: string) {
-    const { data, error } = await supabase
-        .from("vehicles")
-        .select(`*, timeline_entries (*)`)
-        .eq("id", vehicleId)
-        .single();
-    if (error) {
-        throw error;
-    }
-
-    const vehicle = data as VehicleWithTimeline;
-
-    const text = buildVehicleSummaryText(vehicle);
-    const fileName = makeFileName(vehicle);
-
-    await saveAndShare(fileName, text);
-}
+type TimelineEntryWithAttachments = timelineEntryRow & {
+    attachments?: AttachmentRow[];
+};
 
 //builds pdf file for all vehicles
-function buildAllVehiclesSummaryPdf(vehicles: VehicleWithTimeline[]) {
+async function buildAllVehiclesSummaryPdf(vehicles: VehicleWithTimeline[]) {
     let html = "";
 
     html += "<html><body>";
@@ -147,16 +41,14 @@ function buildAllVehiclesSummaryPdf(vehicles: VehicleWithTimeline[]) {
 
     for (let i = 0; i < vehicles.length; i++) {
         html += "<hr>";
-        html += buildVehicleSummaryPdf(vehicles[i]);
+        html += await buildVehicleSummaryPdf(vehicles[i]);
     }
-
     html += "</body></html>";
-
     return html;
 }
 
 //builds pdf file for one vehicle
-function buildVehicleSummaryPdf(vehicle: VehicleWithTimeline) {
+async function buildVehicleSummaryPdf(vehicle: VehicleWithTimeline) {
     let html = "";
 
     html += "<h2>" + vehicle.year + " " + vehicle.make + " " + vehicle.model + "</h2>";
@@ -169,7 +61,6 @@ function buildVehicleSummaryPdf(vehicle: VehicleWithTimeline) {
 
     if (services.length === 0) {
         html += "<p>No service history found.</p>";
-        html += "</body></html>";
         return html;
     }
 
@@ -190,10 +81,29 @@ function buildVehicleSummaryPdf(vehicle: VehicleWithTimeline) {
         html += "<p>Mechanic Shop: " + (service.mechanic_shop ?? "N/A") + "</p>";
         html += "<p>Completed: " + (service.is_completed ? "Yes" : "No") + "</p>";
         html += "<p>Description: " + (service.description ?? "N/A") + "</p>";
+
+        const attachments = service.attachments ?? [];
+
+        if (attachments.length > 0) {
+            html += "<p><b>Attachments:</b></p>";
+
+            for (let j = 0; j < attachments.length; j++) {
+            const a = attachments[j];
+
+                if (isImage(a.file_type)) {
+                    const { data } = await supabase.storage
+                        .from("attachments")
+                        .createSignedUrl(a.file_path, 300);
+
+                    if (data?.signedUrl) {
+                        html += `<img src="${data.signedUrl}" style="width:200px;margin-bottom:10px;" />`;
+                    }
+                } else {
+                    html += `<p>File: ${getFileName(a.file_path)} (${a.file_type})</p>`;
+                }
+            }
+        }
     }
-
-    html += "</body></html>";
-
     return html;
 }
 
@@ -203,13 +113,17 @@ async function saveAndSharePdf(fileName: string, html: string) {
         html: html,
     });
 
+    const pdfBytes = new Uint8Array(await new File(uri).arrayBuffer());
+    const outputFile = new File(Paths.cache, fileName);
+    outputFile.write(pdfBytes);
+
     const canShare = await Sharing.isAvailableAsync();
 
     if (!canShare) {
         throw new Error("Sharing not available");
     }
 
-    await Sharing.shareAsync(uri, {
+    await Sharing.shareAsync(outputFile.uri, {
         mimeType: "application/pdf",
         dialogTitle: fileName,
         UTI: "com.adobe.pdf",
@@ -227,7 +141,7 @@ function makePdfFileName(vehicle: VehicleWithTimeline) {
 export async function exportSummaryPdfAllVehicles(userId: string) {
     const { data, error } = await supabase
         .from("vehicles")
-        .select(`*, timeline_entries (*)`)
+        .select(`*, timeline_entries (*, attachments (*))`)
         .eq("user_id", userId);
 
     if (error) {
@@ -236,7 +150,7 @@ export async function exportSummaryPdfAllVehicles(userId: string) {
 
     const vehicles = (data ?? []) as VehicleWithTimeline[];
 
-    const html = buildAllVehiclesSummaryPdf(vehicles);
+    const html = await buildAllVehiclesSummaryPdf(vehicles);
 
     await saveAndSharePdf("all-vehicles-summary.pdf", html);
 }
@@ -245,7 +159,7 @@ export async function exportSummaryPdfAllVehicles(userId: string) {
 export async function exportSummaryPdfVehicle(vehicleId: string) {
     const { data, error } = await supabase
         .from("vehicles")
-        .select(`*, timeline_entries (*)`)
+        .select(`*, timeline_entries (*, attachments (*))`)
         .eq("id", vehicleId)
         .single();
     if (error) {
@@ -254,259 +168,17 @@ export async function exportSummaryPdfVehicle(vehicleId: string) {
 
     const vehicle = data as VehicleWithTimeline;
 
-    const pdf = buildVehicleSummaryPdf(vehicle);
+    const content = await buildVehicleSummaryPdf(vehicle);
+    const pdf =
+        "<html><body>" +
+        "<h1>Maintenance Buddy Summary Report</h1>" +
+        "<p>Exported: " + new Date().toLocaleString() + "</p>" +
+        content +
+        "</body></html>";
+
     const fileName = makePdfFileName(vehicle);
 
     await saveAndSharePdf(fileName, pdf);
-}
-
-//builds docx file for one vehicle
-function buildVehicleSummaryDocx(vehicle: VehicleWithTimeline) {
-    const children: Paragraph[] = [];
-
-    children.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: "Maintenance Buddy Summary Report",
-                    bold: true,
-                }),
-            ],
-        })
-    );
-
-    children.push(
-        new Paragraph("Exported: " + new Date().toLocaleString())
-    );
-
-    children.push(new Paragraph(""));
-
-    children.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: "Vehicle: " + vehicle.year + " " + vehicle.make + " " + vehicle.model,
-                    bold: true,
-                }),
-            ],
-        })
-    );
-
-    children.push(
-        new Paragraph("Current Mileage: " + (vehicle.recent_mileage ?? "N/A"))
-    );
-
-    children.push(new Paragraph(""));
-
-    let services = vehicle.timeline_entries;
-    if (!services) {
-        services = [];
-    }
-
-    if (services.length === 0) {
-        children.push(new Paragraph("No service history found."));
-    } else {
-        const sorted = [...services].sort((a, b) => {
-            return new Date(b.date).getTime() - new Date(a.date).getTime();
-        });
-
-        const last30 = sorted.slice(0, 30);
-
-        for (let i = 0; i < last30.length; i++) {
-            const s = last30[i];
-
-            children.push(
-                new Paragraph({
-                    children: [
-                        new TextRun({
-                            text: "Service " + (i + 1),
-                            bold: true,
-                        }),
-                    ],
-                })
-            );
-
-            children.push(new Paragraph("Date: " + s.date));
-            children.push(new Paragraph("Service Type: " + s.service_type));
-            children.push(new Paragraph("Mileage: " + (s.mileage_at_service ?? "N/A")));
-            children.push(new Paragraph("Mechanic Shop: " + (s.mechanic_shop ?? "N/A")));
-            children.push(new Paragraph("Completed: " + (s.is_completed ? "Yes" : "No")));
-            children.push(new Paragraph("Description: " + (s.description ?? "N/A")));
-            children.push(new Paragraph(""));
-        }
-    }
-
-    const doc = new Document({
-        sections: [
-            {
-                children: children,
-            },
-        ],
-    });
-
-    return doc;
-}
-
-//builds docx file for all vehicles
-function buildAllVehiclesSummaryDocx(vehicles: VehicleWithTimeline[]) {
-    const children: Paragraph[] = [];
-
-    children.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: "Maintenance Buddy Summary Report",
-                    bold: true,
-                }),
-            ],
-        })
-    );
-
-    children.push(new Paragraph("Exported: " + new Date().toLocaleString()));
-    children.push(new Paragraph("Total Vehicles: " + vehicles.length));
-    children.push(new Paragraph(""));
-
-    if (vehicles.length === 0) {
-        children.push(new Paragraph("No vehicles found."));
-    } else {
-        for (let i = 0; i < vehicles.length; i++) {
-            const vehicle = vehicles[i];
-
-            children.push(
-                new Paragraph({
-                    children: [
-                        new TextRun({
-                            text: "Vehicle " + (i + 1),
-                            bold: true,
-                        }),
-                    ],
-                })
-            );
-
-            children.push(
-                new Paragraph(vehicle.year + " " + vehicle.make + " " + vehicle.model)
-            );
-
-            children.push(
-                new Paragraph("Current Mileage: " + (vehicle.recent_mileage ?? "N/A"))
-            );
-
-            children.push(new Paragraph(""));
-
-            let services = vehicle.timeline_entries;
-            if (!services) {
-                services = [];
-            }
-
-            if (services.length === 0) {
-                children.push(new Paragraph("No service history found."));
-                children.push(new Paragraph(""));
-            } else {
-                const sorted = [...services].sort((a, b) => {
-                    return new Date(b.date).getTime() - new Date(a.date).getTime();
-                });
-
-                const last30 = sorted.slice(0, 30);
-
-                for (let j = 0; j < last30.length; j++) {
-                    const s = last30[j];
-
-                    children.push(
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: "Service " + (j + 1),
-                                    bold: true,
-                                }),
-                            ],
-                        })
-                    );
-
-                    children.push(new Paragraph("Date: " + s.date));
-                    children.push(new Paragraph("Service Type: " + s.service_type));
-                    children.push(new Paragraph("Mileage: " + (s.mileage_at_service ?? "N/A")));
-                    children.push(new Paragraph("Mechanic Shop: " + (s.mechanic_shop ?? "N/A")));
-                    children.push(new Paragraph("Completed: " + (s.is_completed ? "Yes" : "No")));
-                    children.push(new Paragraph("Description: " + (s.description ?? "N/A")));
-                    children.push(new Paragraph(""));
-                }
-            }
-        }
-    }
-
-    const doc = new Document({
-        sections: [
-            {
-                children: children,
-            },
-        ],
-    });
-
-    return doc;
-}
-
-//shares docx to user
-async function saveAndShareDocx(fileName: string, doc: Document) {
-    const arrayBuffer = await Packer.toArrayBuffer(doc);
-
-    const file = new File(Paths.cache, fileName);
-    file.write(new Uint8Array(arrayBuffer));
-
-    const canShare = await Sharing.isAvailableAsync();
-
-    if (!canShare) {
-        throw new Error("Sharing not available");
-    }
-
-    await Sharing.shareAsync(file.uri, {
-        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        dialogTitle: fileName,
-        UTI: "org.openxmlformats.wordprocessingml.document",
-    });
-}
-
-//docx file name
-function makeDocxFileName(vehicle: VehicleWithTimeline) {
-    let fileName = vehicle.year + "-" + vehicle.make + "-" + vehicle.model + "-summary.docx";
-    fileName = fileName.replace(/\s+/g, "-").toLowerCase();
-    return fileName;
-}
-
-//docx function for all vehicles
-export async function exportSummaryDocxAllVehicles(userId: string) {
-    const { data, error } = await supabase
-        .from("vehicles")
-        .select(`*, timeline_entries (*)`)
-        .eq("user_id", userId);
-
-    if (error) {
-        throw error;
-    }
-
-    const vehicles = (data ?? []) as VehicleWithTimeline[];
-
-    const docx = buildAllVehiclesSummaryDocx(vehicles);
-
-    await saveAndShareDocx("all-vehicles-summary.docx", docx);
-}
-
-//docx function for one vehicle
-export async function exportSummaryDocxVehicle(vehicleId: string) {
-    const { data, error } = await supabase
-        .from("vehicles")
-        .select(`*, timeline_entries (*)`)
-        .eq("id", vehicleId)
-        .single();
-    if (error) {
-        throw error;
-    }
-
-    const vehicle = data as VehicleWithTimeline;
-
-    const docx = buildVehicleSummaryDocx(vehicle);
-    const fileName = makeDocxFileName(vehicle);
-
-    await saveAndShareDocx(fileName, docx);
 }
 
 //file name for zip
@@ -602,10 +274,6 @@ export async function exportVehicleFullZip(vehicleId: string) {
         idempotent: true,
         intermediates: true,
     });
-
-    const summaryFile = new File(exportFolder, "summary.txt");
-    const summaryText = buildVehicleSummaryText(vehicle);
-    summaryFile.write(summaryText);
 
     const vehicleFile = new File(exportFolder, "vehicle.json");
     const vehicleJson = JSON.stringify(vehicle, null, 2);
