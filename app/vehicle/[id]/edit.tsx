@@ -58,10 +58,7 @@ export default function EditVehicle() {
                 fuel_type,
             }
         });
-
-        Alert.alert("Success", "Vehicle Updated", [
-            { text: "OK", onPress: () => router.back() },
-        ]);
+        router.back() 
     } catch (error: any) {
         Alert.alert("Error", error.message || "Failed to update vehicle");
     }

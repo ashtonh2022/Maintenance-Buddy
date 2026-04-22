@@ -19,10 +19,7 @@ export default function Login() {
         //displays message if successful then routes to dashboard otherwite shows error
         try {
             await signInMutation.mutateAsync({ email, password });
-            Alert.alert("Success", "Logged in successfully", [{
-                text: "OK",
-                onPress: () => router.replace("/"),
-            },]);
+            router.replace("/(tabs)")
         } catch (error: any) {
             Alert.alert("Login Failed", error.message || "Something went wrong");
         }

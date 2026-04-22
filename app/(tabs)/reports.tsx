@@ -45,14 +45,7 @@ export default function Reports() {
                         </Text>
                         <View style={styles.buttonRow}>
 
-                            <Pressable style={styles.formatButton} onPress={() => exportPdfVehicle.mutate(vehicle.id, {
-                                onError: (error: any) => {
-                                    Alert.alert("PDF Error", error?.message || "PDF export failed");
-                                },
-                                onSuccess: () => {
-                                    Alert.alert("Success", "PDF export finished");
-                                },
-                            })}>
+                            <Pressable style={styles.formatButton} onPress={() => exportPdfVehicle.mutate(vehicle.id)}>
                                 <Text style={styles.buttonText}>PDF</Text>
                             </Pressable>
                         </View>

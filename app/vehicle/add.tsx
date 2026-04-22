@@ -94,11 +94,7 @@ export default function AddVehicle() {
                     }))
                 );
             }
-
-            Alert.alert("Success", "Vehicle added", [{
-                text: "OK",
-                onPress: () => router.back(),
-            }]);
+            router.back()
         } catch (error: any) {
             Alert.alert("Error", error.message || "Failed to add vehicle");
         }

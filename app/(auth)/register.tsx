@@ -24,10 +24,7 @@ export default function Register() {
 
         try {
             await signUpMutation.mutateAsync({ email, password });
-            Alert.alert("Success", "Account created", [{
-                text: "OK",
-                onPress: () => router.replace("/(auth)/login"),
-            },]);
+            router.replace("/(auth)/login")
         } catch (error: any) {
             Alert.alert("Register Failed", error.message || "Something went wrong");
         }
