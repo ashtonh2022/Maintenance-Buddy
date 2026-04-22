@@ -191,7 +191,7 @@ export default function AddService() {
                 file_type: documentFile.mimeType ?? "application/pdf",
             });
         };
-        router.back();
+        router.replace(`/vehicle/${id}`);
     }
 
     return (

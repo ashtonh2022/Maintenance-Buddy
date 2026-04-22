@@ -67,14 +67,8 @@ export default function ServiceDetail() {
                 <Text style={styles.label}>Date</Text>
                 <Text style={styles.value}>{entry.date}</Text>
 
-                <Text style={styles.label}>Time</Text>
-                <Text style={styles.value}>{entry.time ?? "N/A"}</Text>
-
                 <Text style={styles.label}>Mileage</Text>
                 <Text style={styles.value}>{entry.mileage_at_service ?? "N/A"}</Text>
-
-                <Text style={styles.label}>Completed</Text>
-                <Text style={styles.value}>{entry.is_completed ? "Yes" : "No"}</Text>
 
                 <Text style={styles.label}>Description</Text>
                 <Text style={styles.value}>{entry.description ?? "N/A"}</Text>
