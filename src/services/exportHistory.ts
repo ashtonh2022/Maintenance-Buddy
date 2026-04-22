@@ -1,7 +1,6 @@
 import { File, Paths, Directory } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
-import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 import { zip } from "react-native-zip-archive";
 import { supabase } from "@/lib/supabase";
 import { VehicleRow, timelineEntryRow, AttachmentRow } from "@/types/types";
