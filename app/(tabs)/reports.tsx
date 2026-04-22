@@ -3,6 +3,7 @@ import { ScrollView, View, Text, Pressable, StyleSheet } from "react-native";
 import { useExportPdfAllVehicles, useExportSummaryPdfVehicle, useExportVehicleFullZip } from "@/hooks/useReports";
 import { useAuth } from "@/contexts/AuthContext";
 import { useVehicles } from "@/hooks/useVehicles";
+import { Alert } from "react-native";
 
 export default function Reports() {
     const { session } = useAuth();
@@ -44,7 +45,14 @@ export default function Reports() {
                         </Text>
                         <View style={styles.buttonRow}>
 
-                            <Pressable style={styles.formatButton} onPress={() => exportPdfVehicle.mutate(vehicle.id)}>
+                            <Pressable style={styles.formatButton} onPress={() => exportPdfVehicle.mutate(vehicle.id, {
+                                onError: (error: any) => {
+                                    Alert.alert("PDF Error", error?.message || "PDF export failed");
+                                },
+                                onSuccess: () => {
+                                    Alert.alert("Success", "PDF export finished");
+                                },
+                            })}>
                                 <Text style={styles.buttonText}>PDF</Text>
                             </Pressable>
                         </View>
@@ -65,7 +73,14 @@ export default function Reports() {
                         </Text>
 
                         <View style={styles.buttonRow}>
-                            <Pressable style={styles.formatButton}onPress={() => exportZipVehicle.mutate(vehicle.id)}>
+                            <Pressable style={styles.formatButton}onPress={() => exportZipVehicle.mutate(vehicle.id, {
+                                onError: (error: any) => {
+                                    Alert.alert("ZIP Error", error?.message || "ZIP export failed");
+                                },
+                                onSuccess: () => {
+                                    Alert.alert("Success", "ZIP export finished");
+                                },
+                            })}>
                                 <Text style={styles.buttonText}>ZIP</Text>
                             </Pressable>
                         </View>
