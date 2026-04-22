@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, View, Text, Pressable, StyleSheet } from "react-native";
-import { useExportPdfAllVehicles, useExportDocxAllVehicles, useExportSummaryPdfVehicle, useExportSummaryDocxVehicle, useExportVehicleFullZip } from "@/hooks/useReports";
+import { useExportPdfAllVehicles, useExportSummaryPdfVehicle, useExportVehicleFullZip } from "@/hooks/useReports";
 import { useAuth } from "@/contexts/AuthContext";
 import { useVehicles } from "@/hooks/useVehicles";
 
@@ -13,10 +13,7 @@ export default function Reports() {
     const { data: vehicles, isLoading, error } = useVehicles();
 
     const exportPdfAll = useExportPdfAllVehicles();
-    const exportDocxAll = useExportDocxAllVehicles();
-
     const exportPdfVehicle = useExportSummaryPdfVehicle();
-    const exportDocxVehicle = useExportSummaryDocxVehicle();
 
     const exportZipVehicle = useExportVehicleFullZip();
 
@@ -34,10 +31,6 @@ export default function Reports() {
                         <Pressable style={styles.formatButton} onPress={() => exportPdfAll.mutate(userId)}>
                             <Text style={styles.buttonText}>PDF</Text>
                         </Pressable>
-
-                        <Pressable style={styles.formatButton} onPress={() => exportDocxAll.mutate(userId)}>
-                            <Text style={styles.buttonText}>DOCX</Text>
-                        </Pressable>
                     </View>
                 </View>
 
@@ -53,10 +46,6 @@ export default function Reports() {
 
                             <Pressable style={styles.formatButton} onPress={() => exportPdfVehicle.mutate(vehicle.id)}>
                                 <Text style={styles.buttonText}>PDF</Text>
-                            </Pressable>
-
-                            <Pressable style={styles.formatButton} onPress={() => exportDocxVehicle.mutate(vehicle.id)}>
-                                <Text style={styles.buttonText}>DOCX</Text>
                             </Pressable>
                         </View>
                     </View>
