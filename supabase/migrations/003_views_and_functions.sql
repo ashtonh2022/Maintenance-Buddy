@@ -22,7 +22,7 @@ EXECUTE FUNCTION public.handle_new_user();
 -----------------------------------------------------------
 
 -- Computed view: estimated mileage based on rate and time elapsed
-create view vehicles_with_estimated_mileage as
+CREATE OR REPLACE VIEW vehicles_with_estimated_mileage AS
 select *,
        recent_mileage + (mileage_rate * extract(day from now() - mileage_updated_at) / 365)::int
   as estimated_mileage
@@ -35,9 +35,9 @@ from vehicles;
 CREATE OR REPLACE FUNCTION public.check_notifications()
 RETURNS void AS $$
 DECLARE
-  v record;
-  appt record;
-  svc record;
+  vehicle record;
+  appointment record;
+  service record;
   last_mileage int;
   estimated int;
   miles_since int;
@@ -45,7 +45,7 @@ DECLARE
   existing_id uuid;
 BEGIN
   -- Loop through all vehicles with estimated mileage
-  FOR v IN
+  FOR vehicle IN
     SELECT vm.*, p.id as profile_id
     FROM vehicles_with_estimated_mileage vm
     JOIN profiles p ON p.id = vm.user_id
@@ -53,47 +53,47 @@ BEGIN
   LOOP
 
     -- 1. Appointment reminders: check for appointments tomorrow
-    FOR appt IN
+    FOR appointment IN
       SELECT * FROM timeline_entries
-      WHERE vehicle_id = v.id
+      WHERE vehicle_id = vehicle.id
         AND is_completed = false
         AND date = current_date + interval '1 day'
     LOOP
-      notif_message := appt.service_type || ' appointment is coming up';
+      notif_message := appointment.service_type || ' appointment is coming up';
 
       SELECT id INTO existing_id FROM notifications
-      WHERE user_id = v.user_id
-        AND vehicle_id = v.id
+      WHERE user_id = vehicle.user_id
+        AND vehicle_id = vehicle.id
         AND message = notif_message
-        AND scheduled_date = appt.date
+        AND scheduled_date = appointment.date
       LIMIT 1;
 
       IF existing_id IS NULL THEN
         INSERT INTO notifications (user_id, vehicle_id, message, scheduled_date, type, is_sent, is_read)
-        VALUES (v.user_id, v.id, notif_message, appt.date, 'appointment_reminder', true, false);
+        VALUES (vehicle.user_id, vehicle.id, notif_message, appointment.date, 'appointment_reminder', true, false);
       END IF;
 
       existing_id := NULL;
     END LOOP;
 
     -- 2. Maintenance due: check estimated mileage against required services
-    estimated := v.estimated_mileage;
+    estimated := vehicle.estimated_mileage;
 
-    FOR svc IN
-      SELECT * FROM required_services WHERE vehicle_id = v.id AND enabled = true
+    FOR service IN
+      SELECT * FROM required_services WHERE vehicle_id = vehicle.id AND enabled = true
     LOOP
       -- Find the mileage at the last completed service of this type
       SELECT mileage_at_service INTO last_mileage
       FROM timeline_entries
-      WHERE vehicle_id = v.id
-        AND service_type = svc.service_name
+      WHERE vehicle_id = vehicle.id
+        AND service_type = service.service_name
         AND is_completed = true
       ORDER BY date DESC
       LIMIT 1;
 
       -- If never serviced, skip if user opted out of first reminder
       IF last_mileage IS NULL THEN
-        IF svc.skip_first_reminder THEN
+        IF service.skip_first_reminder THEN
           CONTINUE;
         END IF;
         last_mileage := 0;
@@ -102,13 +102,13 @@ BEGIN
       miles_since := estimated - last_mileage;
 
       -- Notify if within 500 miles of the interval or overdue
-      IF miles_since >= (svc.interval_miles - 500) THEN
-        notif_message := svc.service_name || ' is due at ' || (last_mileage + svc.interval_miles) || ' miles';
+      IF miles_since >= (service.interval_miles - 500) THEN
+        notif_message := service.service_name || ' is due at ' || (last_mileage + service.interval_miles) || ' miles';
 
         -- Only create a new notification if none was sent in the last 7 days
         SELECT id INTO existing_id FROM notifications
-        WHERE user_id = v.user_id
-          AND vehicle_id = v.id
+        WHERE user_id = vehicle.user_id
+          AND vehicle_id = vehicle.id
           AND message = notif_message
           AND type = 'maintenance_due'
           AND scheduled_date > current_date - interval '7 days'
@@ -116,7 +116,7 @@ BEGIN
 
         IF existing_id IS NULL THEN
           INSERT INTO notifications (user_id, vehicle_id, message, scheduled_date, type, is_sent, is_read)
-          VALUES (v.user_id, v.id, notif_message, current_date, 'maintenance_due', true, false);
+          VALUES (vehicle.user_id, vehicle.id, notif_message, current_date, 'maintenance_due', true, false);
         END IF;
 
         existing_id := NULL;

@@ -134,6 +134,7 @@ export type Database = {
       required_services: {
         Row: {
           created_at: string
+          enabled: boolean
           id: string
           interval_miles: number
           service_name: string
@@ -142,6 +143,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          enabled?: boolean
           id?: string
           interval_miles: number
           service_name: string
@@ -150,6 +152,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          enabled?: boolean
           id?: string
           interval_miles?: number
           service_name?: string

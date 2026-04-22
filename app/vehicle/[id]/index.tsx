@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
 import { useServiceEvents, useAppointments, useDeleteTimelineEntry } from "@/hooks/useTimeline";
+import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
 
 export default function VehicleDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
