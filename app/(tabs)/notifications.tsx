@@ -1,5 +1,5 @@
 import { ActivityIndicator, Alert, ScrollView, Pressable, StyleSheet, Text, View } from "react-native";
-import { useMarkAllNotificationsAsRead, useMarkNotificationAsRead, useNotifications } from "@/hooks/useNotifications";
+import { useMarkAllNotificationsAsRead, useMarkNotificationAsRead, useNotifications, useDeleteNotification } from "@/hooks/useNotifications";
 import { router } from "expo-router";
 import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +16,8 @@ export default function Notifications() {
 
     const markOneAsRead = useMarkNotificationAsRead(userId);
     const markAllAsRead = useMarkAllNotificationsAsRead(userId);
+
+    const deleteNotificationMutation = useDeleteNotification(userId);
 
     let unreadNotifications: NotificationRow[] = [];
     let earlierNotifications: NotificationRow[] = [];
@@ -100,6 +102,12 @@ export default function Notifications() {
                                     Due: {item.scheduled_date}
                                 </Text>
                             </Pressable>
+                            <Pressable
+                                style={styles.deleteButton}
+                                onPress={() => deleteNotificationMutation.mutate(item.id)}
+                            >
+                            <Text style={styles.deleteButtonText}>Delete</Text>
+                            </Pressable>
                         </View>
                     ))}    
                 </>
@@ -182,6 +190,19 @@ const styles = StyleSheet.create({
     dateText: {
         fontSize: 14,
         color: "#666",
+    },
+    deleteButton: {
+        marginTop: 10,
+        backgroundColor: "#d9534f",
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        alignSelf: "flex-start",
+    },
+
+    deleteButtonText: {
+        color: "white",
+        fontWeight: "600",
     },
 });
 

@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { parseYear, parsePositiveInt } from "@/lib/validation";
+import { Database } from "@/types/database.types";
 
 //variables
 export default function EditVehicle() {
@@ -14,7 +15,10 @@ export default function EditVehicle() {
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [year, setYear] = useState("");
+    const [fuel_type, setFuel_Type] = useState<Database["public"]["Enums"]["fuel_type"]>("petrol");
+    const fuelOptions: Database["public"]["Enums"]["fuel_type"][] = ["petrol", "diesel", "hybrid", "electric",];
     const [mileage, setMileage] = useState("");
+
     const updateVehicleMutation = useUpdateVehicle();
     const deleteVehicleMutation = useDeleteVehicle();
 
@@ -24,6 +28,7 @@ export default function EditVehicle() {
             setModel(vehicle.model ?? '');
             setYear(String(vehicle.year ?? ''));
             setMileage(String(vehicle.recent_mileage ?? ''));
+            setFuel_Type(vehicle.fuel_type ?? "petrol");
         }
     }, [vehicle]);
 
@@ -50,6 +55,7 @@ export default function EditVehicle() {
                 model,
                 year: parseYear(year)!,
                 recent_mileage: parsePositiveInt(mileage)!,
+                fuel_type,
             }
         });
 
@@ -109,6 +115,21 @@ export default function EditVehicle() {
             keyboardType="numeric"
         />
 
+        <Text style={styles.label}>Fuel Type</Text>
+        <View style={styles.optionRow}>
+            {fuelOptions.map((type) => (
+                <Pressable
+                    key={type}
+                    style={[styles.option, fuel_type === type && styles.selectedOption]}
+                    onPress={() => setFuel_Type(type)}
+                >
+                    <Text style={fuel_type === type ? styles.selectedOptionText : styles.optionText}>
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </Text>
+                 </Pressable>
+            ))}
+        </View>
+
         <Pressable style={styles.button} onPress={handleSaveChanges}>
         <Text style={styles.buttonText}>Save Changes</Text>
         </Pressable>
@@ -159,5 +180,34 @@ const styles = StyleSheet.create({
     deleteButtonText: {
         color: "#fff",
         fontWeight: "600",
+    },
+    selectedOption: {
+        backgroundColor: "#2323FF",
+    },
+    optionText: {
+        color: "#000",
+    },
+    selectedOptionText: {
+        color: "#fff",
+        fontWeight: "600",
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 8,
+        marginTop: 8,
+    },
+    optionRow: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginBottom: 12,
+        gap: 8,
+    },
+    option: {
+        borderWidth: 1,
+        borderColor: "#2323FF",
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
     },
 });

@@ -1,4 +1,4 @@
-import { getNotifications, updateNotifications, getUnreadNotifications, getUnreadNotificationCount, createNotifications, markNotificationAsRead, markAllNotificationsAsRead, } from "@/services/notifications";
+import { getNotifications, updateNotifications, getUnreadNotifications, getUnreadNotificationCount, createNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from "@/services/notifications";
 import { NotificationRow, NotificationInsert, NotificationUpdate } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -102,4 +102,17 @@ export function useMarkAllNotificationsAsRead(userId: string) {
                 })    
             }
         });
+}
+
+export function useDeleteNotification(userId: string) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: string) => deleteNotification(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notification", userId] });
+            queryClient.invalidateQueries({ queryKey: ["unreadNotifications", userId] });
+            queryClient.invalidateQueries({ queryKey: ["unreadNotificationCount", userId] });
+        },
+    });
 }

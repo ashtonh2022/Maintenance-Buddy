@@ -151,3 +151,11 @@ export const deleteNotificationByVehicleAndDate = async (vehicleId: string,date:
         .eq("type", "appointment_reminder");
     if (error) throw error;
 };
+
+export async function deleteNotification(id: string) {
+    const { error } = await supabase
+        .from("notifications")
+        .delete()
+        .eq("id", id);
+    if (error) throw error;
+}
