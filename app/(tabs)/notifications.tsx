@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { ActivityIndicator, Alert, ScrollView, Pressable, StyleSheet, Text, View } from "react-native";
-import { useMarkAllNotificationsAsRead, useMarkNotificationAsRead, useNotifications, useDeleteNotification } from "@/hooks/useNotifications";
-import { router } from "expo-router";
-=======
->>>>>>> 5169992 (Merged UI redesign with existing app logic for tabs and screens)
 import React from "react";
 import {
   ActivityIndicator,
@@ -15,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+
 import { useAuth } from "@/contexts/AuthContext";
 import {
   useMarkAllNotificationsAsRead,
@@ -22,6 +17,7 @@ import {
   useNotifications,
 } from "@/hooks/useNotifications";
 import { NotificationRow } from "@/types/types";
+
 import { common } from "../../styles/common";
 import { colors, spacing } from "../../styles/themes";
 
@@ -38,13 +34,11 @@ export default function NotificationsScreen() {
   const markOneAsRead = useMarkNotificationAsRead(userId);
   const markAllAsRead = useMarkAllNotificationsAsRead(userId);
 
-  let unreadNotifications: NotificationRow[] = [];
-  let earlierNotifications: NotificationRow[] = [];
+  const unreadNotifications: NotificationRow[] =
+    notifications?.filter((item) => item.is_read === false) ?? [];
 
-  if (notifications) {
-    unreadNotifications = notifications.filter((item) => item.is_read === false);
-    earlierNotifications = notifications.filter((item) => item.is_read === true);
-  }
+  const earlierNotifications: NotificationRow[] =
+    notifications?.filter((item) => item.is_read === true) ?? [];
 
   const handlePressNotification = async (notification: NotificationRow) => {
     if (!notification.is_read) {
@@ -58,12 +52,6 @@ export default function NotificationsScreen() {
     await markAllAsRead.mutateAsync();
   };
 
-<<<<<<< HEAD
-    const deleteNotificationMutation = useDeleteNotification(userId);
-
-    let unreadNotifications: NotificationRow[] = [];
-    let earlierNotifications: NotificationRow[] = [];
-=======
   return (
     <View style={common.screen}>
       <View style={styles.header}>
@@ -73,7 +61,6 @@ export default function NotificationsScreen() {
             Stay updated on maintenance schedules and appointments.
           </Text>
         </View>
->>>>>>> 5169992 (Merged UI redesign with existing app logic for tabs and screens)
 
         {!!notifications?.length && (
           <Pressable style={styles.markAllButton} onPress={handleMarkAllAsRead}>
@@ -111,8 +98,8 @@ export default function NotificationsScreen() {
             />
             <Text style={styles.emptyTitle}>No notifications</Text>
             <Text style={styles.emptySubtitle}>
-              You&apos;re all caught up. Important updates about your vehicles
-              and services will appear here.
+              You're all caught up. Important updates about your vehicles and
+              services will appear here.
             </Text>
           </View>
         )}
@@ -143,154 +130,6 @@ export default function NotificationsScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Earlier</Text>
 
-<<<<<<< HEAD
-            {error && (
-                <Text style={styles.text}>Could not load notifications.</Text>
-            )}
-
-            {!isLoading && !error && notifications?.length === 0 && (
-                <Text style={styles.text}>No unread notifications.</Text>
-            )}
-
-            {!isLoading && !error && unreadNotifications.length > 0 && (
-                <>
-                    <Text style={styles.listTitle}>Unread</Text>
-                    {unreadNotifications.map((item) => (
-                        <Pressable
-                            key={item.id}
-                            style={styles.card}
-                            onPress={() => handlePressNotification(item)}
-                        >
-                        <View style={styles.row}>
-                            <View style={styles.dot} />
-                            <Text style={styles.typeText}>{item.type}</Text>
-                        </View>
-
-                            <Text style={styles.message}>{item.message}</Text>
-                            <Text style={styles.dateText}>
-                                Due: {item.scheduled_date}
-                            </Text>
-                        </Pressable>
-                    ))}    
-                </>
-            )}
-            {!isLoading && !error && earlierNotifications.length > 0 && (
-                <>
-                    <Text style={styles.listTitle}>Earlier</Text>
-                    {earlierNotifications.map((item) => (
-                        <View key={item.id} style={styles.card}>
-                            <Pressable onPress={() => handlePressNotification(item)}>
-                                <Text style={styles.typeText}>{item.type}</Text>
-                                <Text style={styles.message}>{item.message}</Text>
-                                <Text style={styles.dateText}>
-                                    Due: {item.scheduled_date}
-                                </Text>
-                            </Pressable>
-                            <Pressable
-                                style={styles.deleteButton}
-                                onPress={() => deleteNotificationMutation.mutate(item.id)}
-                            >
-                            <Text style={styles.deleteButtonText}>Delete</Text>
-                            </Pressable>
-                        </View>
-                    ))}    
-                </>
-            )}
-        </ScrollView>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
-    },
-    text: {
-        color: "#666",
-        fontSize: 16,
-        textAlign: "center",
-        marginTop: 20,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: "600",
-        marginBottom: 6,
-    },
-    sectionTitle: {
-        fontSize: 14,
-        color: "#666",
-    },
-    headerBox: {
-        marginBottom: 20,
-    },
-    markAllButton: {
-        backgroundColor: "#2563eb",
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 8,
-        alignSelf: "flex-start",
-        marginTop: 10,
-    },
-    markAllButtonText: {
-        color: "#fff",
-        fontSize: 12,
-        fontWeight: "600",
-    },
-    listTitle: {
-        fontSize: 20,
-        fontWeight: "600",
-        marginTop: 12,
-        marginBottom: 10,
-    },
-    card: {
-        backgroundColor: "#f5f5f5",
-        borderRadius: 10,
-        padding: 14,
-        marginBottom: 12,
-    },
-    row: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 8,
-    },
-    dot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: "red",
-        marginRight: 8,
-    },
-    typeText: {
-        fontSize: 13,
-        fontWeight: "600",
-        color: "#444",
-    },
-    message: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 6,
-    },
-    dateText: {
-        fontSize: 14,
-        color: "#666",
-    },
-    deleteButton: {
-        marginTop: 10,
-        backgroundColor: "#d9534f",
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        alignSelf: "flex-start",
-    },
-
-    deleteButtonText: {
-        color: "white",
-        fontWeight: "600",
-    },
-});
-
-=======
             {earlierNotifications.map((item) => (
               <Pressable
                 key={item.id}
@@ -412,4 +251,3 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
 });
->>>>>>> 5169992 (Merged UI redesign with existing app logic for tabs and screens)
