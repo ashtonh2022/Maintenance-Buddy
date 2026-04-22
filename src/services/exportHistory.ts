@@ -1,8 +1,13 @@
 import { File, Paths, Directory } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
+<<<<<<< HEAD
 import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 import { zip } from "react-native-zip-archive";
+=======
+import { Document, Packer, Paragraph, TextRun } from "docx";
+//import { zip } from "react-native-zip-archive";
+>>>>>>> 5169992 (Merged UI redesign with existing app logic for tabs and screens)
 import { supabase } from "@/lib/supabase";
 import { VehicleRow, timelineEntryRow, AttachmentRow } from "@/types/types";
 
