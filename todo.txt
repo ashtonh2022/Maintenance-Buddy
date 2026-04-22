@@ -1,27 +1,9 @@
 MAINTENANCE BUDDY - MVP TODO
 =============================
 
-[ ] Input validation — date pickers and number checks
-    Replace raw text inputs for dates with date pickers on add service and add appointment screens.
-    Add number validation for year, mileage, and mileage rate fields.
-
-[ ] File upload to Supabase storage
-    Wire up actual file upload to Supabase storage bucket.
-    Display uploaded photos/docs on the service event detail view.
-
-[ ] Maintenance due reminders
-    Use required_services + vehicle mileage + mileage rate to calculate when each service is next due.
-    Show upcoming due services on the dashboard and create notifications.
-
-[ ] Update edit vehicle screen
-    Add fuel type field to the edit vehicle form.
-    Verify that save and delete actually persist to the database.
-
 [ ] Reports / export — verify functionality
     Reports screen and hooks exist. Test that TXT, PDF, DOCX, and ZIP exports work end to end.
 
-[ ] Clean up empty route files
-    Either implement or delete onboarding.tsx, service/[id].tsx, and schedule/[vehicleId].tsx.
 
 [ ] UI polish — consistent styling across all screens
     Consistent spacing, typography, colors, card styles, button styles, and empty states.

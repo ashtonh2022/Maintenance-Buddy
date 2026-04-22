@@ -74,7 +74,7 @@
   <p>Common Car maintenance logs have tools included like CARFAX, FIXD, Google Sheets/Microsoft Excel, physical notebooks, and templates used by subscription based fees. Maintenance Buddy is an app where you can store your car's data, maintenance history, and future vehicle services and issues which need attention. The product is built around consistency and reliability. Users are assisted in scheduling maintenance and are reminded to upload information at the point of service and care. The software automatically creates a clear maintenance schedule that demonstrates responsible car ownership by asking users to enter accurate information each time and safely logging notes, images, and receipts.</p>
 
   <h3>4.2 Summary of capabilities</h3>
-  <p>Maintenance logging, Reminder Scheduling, Vehicle profile management, Document Storage, History visualization, Search and Filtering, Exportable Reports, Multi-Vehicle Support.</p>
+  <p>Maintenance logging, Reminder Scheduling, Vehicle profile management, Photo and Document Attachments, History visualization, Notification Center, Required Services Management, Exportable Reports, Multi-Vehicle Support.</p>
 
   <h3>4.3 Assumptions and dependencies</h3>
 
@@ -114,7 +114,7 @@
     <li>When adding a vehicle, users select a fuel type (petrol, diesel, hybrid, or electric) and are presented with a default maintenance schedule based on that type. Users can customize the schedule by adjusting each service's mileage interval using increment/decrement controls (±1,000 and ±5,000 miles). Users may also add or remove services. The resulting schedule is saved as the vehicle's required services.</li>
     <li>The app can send reminders to schedule maintenance appointments by comparing the vehicle's required services and the estimated current mileage since last service.</li>
     <li>Upon receiving a scheduling reminder, users may create appointment entries. Appointment entries do not allow you to schedule appointments within the app. Instead, they are meant to be done after the user has already scheduled the appointment externally. Appointment entries must contain a date and time for a follow-up. They may optionally contain information like "Service being performed", "Company Title", etc.</li>
-    <li>When creating an appointment entry, users may quickly add information by having the app parse a screenshot of the "appointment confirmation details".</li>
+    <li>When creating or completing a service event, users may attach up to 3 photos (PNG/JPEG) and 1 document (PDF/TXT) to the entry. Each attachment is limited to 10MB. These attachments are stored securely and can be viewed alongside the service event details.</li>
     <li>When the time for a follow-up comes, the app will send a reminder letting the user know that it is time to document the service.</li>
     <li>Users may view their vehicle's maintenance history on a timeline and expand a "service event" to view the full details.</li>
     <li>While viewing the maintenance history, appointment entries will show up on the timeline. Upon completion of the follow-up they will become a service event.</li>
@@ -122,11 +122,13 @@
     <li>When creating a service event manually, users may select options including but not limited to: 1) "I did this service myself" 2) "Cosmetic modification", 3) "Performance modification"</li>
     <li>Users may export complete maintenance history. This may come in two forms:
       <ol>
-        <li><strong>"Maintenance Summary" (PDF/DOCX)</strong>: Condensed version of the vehicle history, includes mostly text, maybe 1 photo per service.</li>
-        <li><strong>"Full Report" (ZIP Archive)</strong>: Package containing full, unmodified vehicle history. Inherently a file structure like:<br>
-          "2010 Honda Accord History" → "01-01-26 Oil Change" → before.jpg, after.jpg, invoice.jpg, MechanicComments.txt</li>
+        <li><strong>"Maintenance Summary" (PDF)</strong>: Condensed version of the vehicle history limited to the most recent 30 services, includes mostly text. Users may export a summary for a single vehicle or all vehicles combined.</li>
+        <li><strong>"Full Report" (ZIP Archive)</strong>: Package containing full, unmodified vehicle history including all attachments. The archive is organized with a summary file, vehicle data, service records, and an attachments folder.</li>
       </ol>
     </li>
+    <li>The app includes a dedicated notification center where users can view notifications separated into "Unread" and "Earlier" sections. Tapping a notification navigates the user to the related vehicle. Users can mark individual notifications as read or mark all as read at once. An unread count badge is displayed on the notifications tab.</li>
+    <li>Users may view and manage their vehicle's required services on a dedicated screen. For each service, users can see when it is due based on the mileage interval, edit the mileage interval, and enable or disable individual services. This allows users to fine-tune their maintenance schedule after the initial vehicle setup.</li>
+    <li>The main dashboard displays all of the user's vehicles and shows upcoming appointments across all vehicles. Users can quickly navigate to any vehicle's profile or add a new vehicle from the dashboard.</li>
   </ol>
 
   <h2>6: Constraints</h2>
@@ -138,11 +140,10 @@
 
   <h2>9: Other product requirements</h2>
   <ul>
-    <li><strong>Availability:</strong> Software must be able to run on all platforms including android and IOS operating systems.</li>
+    <li><strong>Availability:</strong> Software must be able to run on Android devices and requires an internet connection.</li>
     <li><strong>Scalability:</strong> Software must be able to handle multiple cars per user.</li>
     <li><strong>Accessibility:</strong> User interface must use fonts that are easy to read and appeal to a wide range of users.</li>
     <li><strong>Notifications:</strong> Users must be able to receive updates and reminders based on vehicle recommendations.</li>
-    <li><strong>Offline Availability:</strong> Users will be able to use the app and upload without the use of an internet connection.</li>
     <li><strong>Maintainability:</strong> System should be structured that allows for future updates and features. Code and DS should support debugging and maintenance overtime.</li>
     <li><strong>Security:</strong> Sensitive data should be protected, and User accounts should require authentication to access personal and vehicle data.</li>
     <li><strong>Performance:</strong> Records and Vehicle data should be loaded quickly and easy to use, and uploading photos or receipts should be completed in a good amount of time.</li>

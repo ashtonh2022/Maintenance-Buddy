@@ -27,7 +27,7 @@
   <div class="entry">
     <p><strong>2.1</strong> user_registration</p>
     <p>Type: Functional</p>
-    <p>Summary: The system should allow users to register an account using email and password or google sign-in.</p>
+    <p>Summary: The system should allow users to register an account using email and password.</p>
   </div>
 
   <div class="entry">
@@ -87,13 +87,13 @@
   <div class="entry">
     <p><strong>2.11</strong> upload_photos</p>
     <p>Type: Functional</p>
-    <p>Summary: Users should be able to upload up to 3 photos such as png, jpeg, etc. to a service event.</p>
+    <p>Summary: Users should be able to upload up to 3 photos (PNG, JPEG) to a service event. Each photo is limited to 10MB.</p>
   </div>
 
   <div class="entry">
     <p><strong>2.12</strong> upload_docs</p>
     <p>Type: Functional</p>
-    <p>Summary: Users should be able to upload text-style documents, including pdf and txt, to a service event. Service events should be limited to 1 pdf attachment.</p>
+    <p>Summary: Users should be able to upload text-style documents, including PDF and TXT, to a service event. Service events should be limited to 1 document attachment. Each document is limited to 10MB.</p>
   </div>
 
   <div class="entry">
@@ -117,7 +117,7 @@
   <div class="entry">
     <p><strong>2.16</strong> export_summary_report</p>
     <p>Type: Functional</p>
-    <p>Summary: Users should be able to export a condensed maintenance summary in PDF or DOCX format.</p>
+    <p>Summary: Users should be able to export a condensed maintenance summary in PDF format. Users may export a summary for a single vehicle or for all vehicles combined.</p>
   </div>
 
   <div class="entry">
@@ -130,6 +130,36 @@
     <p><strong>2.18</strong> export_full_report</p>
     <p>Type: Functional</p>
     <p>Summary: Users should be able to export the complete and unaltered maintenance history as a ZIP archive (one archive per vehicle, images included), organized as one folder per service.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.19</strong> notification_center</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to view and manage notifications in a dedicated notification center. Notifications should be separated into unread and read sections. Users should be able to mark individual notifications as read or mark all as read. An unread count badge should be displayed on the notifications tab.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.20</strong> required_services_management</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to view and manage their vehicle's required services on a dedicated screen. Users should be able to edit the mileage interval for any service and enable or disable individual services.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.21</strong> multi_vehicle_dashboard</p>
+    <p>Type: Functional</p>
+    <p>Summary: The main dashboard should display all of the user's vehicles and show upcoming appointments across all vehicles. Users should be able to navigate to any vehicle or add a new vehicle from the dashboard.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.22</strong> unit_preference</p>
+    <p>Type: Functional</p>
+    <p>Summary: Users should be able to toggle between imperial (miles) and metric (kilometers) units in the settings screen.</p>
+  </div>
+
+  <div class="entry">
+    <p><strong>2.23</strong> skip_first_reminder</p>
+    <p>Type: Functional</p>
+    <p>Summary: When adding a vehicle, users should be able to skip the first maintenance reminder for individual services that have already been recently performed.</p>
   </div>
 
   <h2>3. Interface Requirements</h2>
@@ -193,7 +223,7 @@
   <div class="entry">
     <p><strong>4.2</strong> upload_size</p>
     <p>Type: Constraint</p>
-    <p>Summary: Uploaded photos and files should be limited in size. Photos should be limited to 5MB. PDF/TXT attachments should be limited to 10MB.</p>
+    <p>Summary: Uploaded photos and files should be limited in size. All attachments (photos and documents) are limited to 10MB each.</p>
   </div>
 
   <div class="entry">
@@ -213,7 +243,7 @@
   <div class="entry">
     <p><strong>5.1</strong> software_availability</p>
     <p>Type: Constraint</p>
-    <p>Summary: The system should be available to run on android platforms and be available at all times for use.</p>
+    <p>Summary: The system should be available to run on Android devices and requires an active internet connection for full functionality.</p>
   </div>
 
   <div class="entry">
