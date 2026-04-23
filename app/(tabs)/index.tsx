@@ -39,7 +39,7 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={["#684ae0", "#F8FAFC", "#a36bf8"]}
+        colors={["#b4a6ea", "#F8FAFC", "#bd9af1"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFill}

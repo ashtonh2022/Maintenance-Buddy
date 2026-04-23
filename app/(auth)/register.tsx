@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
+        backgroundColor: "#a6aadf",
         justifyContent: "center",
     },
     title: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     buttonText: {
-        color: "#fff",
+        color: "#ffffff",
         fontWeight: "600",
     },
     link: {
