@@ -55,7 +55,7 @@ export default function NotificationsScreen() {
   return (
     <View style={common.screen}>
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerText}>
           <Text style={styles.headerTitle}>Notifications</Text>
           <Text style={styles.headerSubtitle}>
             Stay updated on maintenance schedules and appointments.
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
     gap: 12,
   },
   headerTitle: {
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 14,
     color: colors.textSecondary,
-    maxWidth: 260,
+    maxWidth: 220,
   },
   content: {
     padding: spacing.lg,
@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 12,
-    alignSelf: "flex-start",
+    alignSelf: "center",
+    flexShrink: 0,
   },
   markAllButtonText: {
     color: "#fff",
@@ -249,5 +250,9 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 14,
     color: colors.textSecondary,
+  },
+  headerText: {
+  flex: 1,
+  paddingRight: 10,
   },
 });

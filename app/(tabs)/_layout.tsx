@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     bottom: 18,
-    height: 76,
+    height: 82,
     borderTopWidth: 0,
     borderRadius: 24,
     backgroundColor: "rgba(255,255,255,0.85)",
@@ -163,6 +163,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 11,
     fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: 4,
   },
 });

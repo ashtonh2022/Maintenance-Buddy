@@ -10,6 +10,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { supabase } from "@/lib/supabase";
+import { Stack } from "expo-router";
 
 export default function AddService() {
     const { id, appointmentId } = useLocalSearchParams<{ id: string; appointmentId?: string }>();
@@ -196,6 +197,7 @@ export default function AddService() {
 
     return (
         <View style={{ padding: 20 }}>
+            <Stack.Screen options={{ title: "Add Service" }} />
             <Text style={styles.label}>Date</Text>
             <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
                 <Text>{formatDate(date)}</Text>
@@ -246,12 +248,24 @@ export default function AddService() {
             </Text>
         </Pressable>
 
+        {photoFile && (
+            <Text style={styles.selectedFileText}>
+                Selected: {photoFile.fileName ?? photoFile.name ?? "photo.jpg"}
+            </Text>
+        )}
+
         <Text style={styles.label}>Document</Text>
         <Pressable style={styles.pickButton} onPress={pickDocument}>
             <Text style={styles.pickButtonText}>
                 {documentFile ? "Document Selected" : "Choose Document"}
             </Text>
         </Pressable>
+
+        {documentFile && (
+            <Text style={styles.selectedFileText}>
+                Selected: {documentFile.name ?? "document.pdf"}
+            </Text>
+        )}
 
         <Button title={isCompleting ? "Complete Appointment" : "Save Service Event"} onPress={handleSubmit} />
         </View>
@@ -315,4 +329,9 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontWeight: "600",
     },
+    selectedFileText: {
+    color: "green",
+    marginBottom: 12,
+    fontWeight: "600",
+},
 });

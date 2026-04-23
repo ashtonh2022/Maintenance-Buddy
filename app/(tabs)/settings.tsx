@@ -3,7 +3,7 @@ import { useSignOut, useResetPassword } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   ScrollView,
@@ -27,6 +27,18 @@ export default function SettingsScreen() {
   const signOutMutation = useSignOut();
   const resetPasswordMutation = useResetPassword();
 
+  const [currentUnits, setCurrentUnits] = useState<"imperial" | "metric">("imperial");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
+  useEffect(() => {
+    if (profile?.units === "imperial" || profile?.units === "metric") {
+      setCurrentUnits(profile.units);
+    }
+    if (typeof profile?.notifications_enabled === "boolean") {
+      setNotificationsEnabled(profile.notifications_enabled);
+    }
+  }, [profile]);
+
   const handleSignOut = async () => {
     try {
       await signOutMutation.mutateAsync();
@@ -46,13 +58,35 @@ export default function SettingsScreen() {
   };
 
   const toggleNotifications = () => {
-    updateProfile.mutate({
-      notifications_enabled: !profile?.notifications_enabled,
-    } as any);
-  };
 
+    const newValue = !notificationsEnabled;
+    setNotificationsEnabled(newValue);
+
+    updateProfile.mutate(
+      {
+        notifications_enabled: newValue,
+      } as any,
+      {
+        onError: (error: any) => {
+          setNotificationsEnabled(!newValue);
+          Alert.alert("Error", error.message || "Could not update notifications");
+        },
+      }
+    );
+  };
   const setUnits = (units: "imperial" | "metric") => {
-    updateProfile.mutate({ units } as any);
+
+    setCurrentUnits(units);
+
+    updateProfile.mutate(
+      { units } as any,
+      {
+        onError: (error: any) => {
+          setCurrentUnits(currentUnits);
+          Alert.alert("Error", error.message || "Could not update units");
+        },
+      }
+    );
   };
 
   return (
@@ -111,34 +145,39 @@ export default function SettingsScreen() {
                 color={colors.primary}
               />
             </View>
-            <Text style={styles.settingText}>Notifications</Text>
+            <View>
+              <Text style={styles.settingText}>Notifications</Text>
+                <Text style={styles.subText}>
+                  {notificationsEnabled ? "Currently on" : "Currently off"}
+              </Text>
+            </View>
           </View>
           <Switch
-            value={profile?.notifications_enabled ?? true}
+            value={notificationsEnabled}
             onValueChange={toggleNotifications}
             trackColor={{ false: "#D1D5DB", true: "#93C5FD" }}
-            thumbColor={
-              profile?.notifications_enabled ?? true
-                ? colors.primary
-                : "#F3F4F6"
-            }
+            thumbColor={notificationsEnabled ? colors.primary : "#F3F4F6"}
           />
         </View>
 
         <View style={[common.card, styles.unitsCard]}>
           <Text style={styles.settingLabel}>Units</Text>
 
+          <Text style={styles.selectedText}>
+            Currently selected: {currentUnits === "imperial" ? "Imperial (mi)" : "Metric (km)"}
+          </Text>
+
           <View style={styles.unitRow}>
             <TouchableOpacity
               style={[
                 styles.unitOption,
-                profile?.units === "imperial" && styles.unitOptionSelected,
+                currentUnits === "imperial" && styles.unitOptionSelected,
               ]}
               onPress={() => setUnits("imperial")}
             >
               <Text
                 style={
-                  profile?.units === "imperial"
+                  currentUnits === "imperial"
                     ? styles.unitOptionTextSelected
                     : styles.unitOptionText
                 }
@@ -150,13 +189,13 @@ export default function SettingsScreen() {
             <TouchableOpacity
               style={[
                 styles.unitOption,
-                profile?.units === "metric" && styles.unitOptionSelected,
+                currentUnits === "metric" && styles.unitOptionSelected,
               ]}
               onPress={() => setUnits("metric")}
             >
               <Text
                 style={
-                  profile?.units === "metric"
+                  currentUnits === "metric"
                     ? styles.unitOptionTextSelected
                     : styles.unitOptionText
                 }
@@ -310,5 +349,11 @@ const styles = StyleSheet.create({
     color: colors.danger,
     fontSize: 16,
     fontWeight: "800",
+  },
+  selectedText: {
+    marginBottom: 12,
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontWeight: "600",
   },
 });

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { parseYear, parsePositiveInt } from "@/lib/validation";
 import { Database } from "@/types/database.types";
+import { Stack } from "expo-router";
 
 //variables
 export default function EditVehicle() {
@@ -83,6 +84,7 @@ export default function EditVehicle() {
 
     return (
         <View style={styles.container}>
+        <Stack.Screen options={{ title: "Edit Vehicle" }} />
         <Text style={styles.title}>Edit Vehicle</Text>
 
         <TextInput

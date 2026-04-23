@@ -4,6 +4,7 @@ import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
 import { useServiceEvents, useAppointments, useDeleteTimelineEntry } from "@/hooks/useTimeline";
 import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
+import { Stack } from "expo-router";
 
 export default function VehicleDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -17,6 +18,7 @@ export default function VehicleDetail() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Stack.Screen options={{ title: "Vehicle Details" }} />
             <View style={styles.topRow}>
                 <Pressable style={styles.backButton} onPress={() => router.push("/(tabs)")}>
                     <Text style={styles.backButtonText}>← Back to Dashboard</Text>

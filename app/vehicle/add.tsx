@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { parseYear, parsePositiveInt } from "@/lib/validation";
 import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
+import { Stack } from "expo-router";
 
 const FUEL_TYPES = ["petrol", "diesel", "hybrid", "electric"] as const;
 
@@ -94,11 +95,7 @@ export default function AddVehicle() {
                     }))
                 );
             }
-
-            Alert.alert("Success", "Vehicle added", [{
-                text: "OK",
-                onPress: () => router.back(),
-            }]);
+            router.back()
         } catch (error: any) {
             Alert.alert("Error", error.message || "Failed to add vehicle");
         }
@@ -144,6 +141,7 @@ export default function AddVehicle() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Stack.Screen options={{ title: "Add Vehicle" }} />
             <Text style={styles.title}>Add Vehicle</Text>
 
             <TextInput

@@ -4,6 +4,7 @@ import { useAddAppointment } from "@/hooks/useTimeline";
 import { useLocalSearchParams, router } from "expo-router";
 import { formatDate } from "@/lib/validation";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Stack } from "expo-router";
 
 export default function AddAppointment() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -31,6 +32,7 @@ export default function AddAppointment() {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{ title: "Add Appointment" }} />
             <Text style={styles.title}>Add Appointment</Text>
 
             <Text style={styles.label}>Service Type</Text>

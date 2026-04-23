@@ -5,6 +5,7 @@ import { useRequiredServices, useUpdateRequiredService } from "@/hooks/useRequir
 import { useServiceEvents } from "@/hooks/useTimeline";
 import { useVehicle } from "@/hooks/useVehicles";
 import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
+import { Stack } from "expo-router";
 
 export default function RequiredServicesPage() {
     const { vehicleId } = useLocalSearchParams<{ vehicleId: string }>();
@@ -28,7 +29,7 @@ export default function RequiredServicesPage() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Required Services</Text>
+            <Stack.Screen options={{ title: "Required Services" }} />
             <Text style={styles.subtitle}>
                 Adjust intervals and enable or disable services
             </Text>
