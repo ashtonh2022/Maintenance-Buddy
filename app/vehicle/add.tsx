@@ -119,7 +119,6 @@ export default function AddVehicle() {
                         serviceName={service.service_name}
                         intervalMiles={service.interval_miles}
                         onIntervalChange={(newInterval) => adjustInterval(index, newInterval - service.interval_miles)}
-                        onRemove={() => removeService(index)}
                     >
                         <Pressable
                             style={styles.skipRow}
