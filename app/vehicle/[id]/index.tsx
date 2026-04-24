@@ -44,16 +44,6 @@ export default function VehicleDetail() {
                     </Pressable>
                 </View>
 
-            <View style={styles.header}>
-                <Text style={styles.eyebrow}>Maintenance Buddy</Text>
-                <Text style={styles.headerTitle}>
-                    {vehicle?.year} {vehicle?.make} {vehicle?.model}
-                </Text>
-                <Text style={styles.headerSubtitle}>
-                    {vehicle?.recent_mileage?.toLocaleString()} miles
-                </Text>
-            </View>
-
             <LinearGradient
                 colors={["#2563EB", "#3B82F6", "#60A5FA"]}
                 start={{ x: 0, y: 0 }}
