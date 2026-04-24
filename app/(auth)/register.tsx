@@ -2,6 +2,8 @@ import { useSignUp } from "@/hooks/useAuth";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function Register() {
     const [email, setEmail] = useState<string>("");
@@ -35,6 +37,7 @@ export default function Register() {
 
     return (
         <View style={styles.container}>
+            <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
             <Text style={styles.title}>Register</Text>
 
         <TextInput
@@ -83,13 +86,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#a6aadf",
         justifyContent: "center",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 20,
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,

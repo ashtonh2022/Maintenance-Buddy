@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors as appColors } from "../../constants/colors";
 
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -54,6 +56,12 @@ export default function NotificationsScreen() {
 
   return (
     <View style={common.screen}>
+      <LinearGradient
+        colors={[appColors.darkNavy, appColors.lightBlue]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
       <View style={styles.header}>
         <View style={styles.headerText}>
           <Text style={styles.headerTitle}>Notifications</Text>
@@ -153,9 +161,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: 60,
     paddingBottom: spacing.md,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -164,12 +169,12 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: "800",
-    color: colors.text,
+    color: "#FFFFFF",
   },
   headerSubtitle: {
     marginTop: 6,
     fontSize: 14,
-    color: colors.textSecondary,
+    color: "#CBD5E1",
     maxWidth: 220,
   },
   content: {
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "800",
-    color: colors.text,
+    color: "#FFFFFF",
     marginBottom: 12,
   },
   notificationCard: {

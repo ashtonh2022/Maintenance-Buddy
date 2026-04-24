@@ -4,6 +4,8 @@ import { DEFAULT_SCHEDULES, DefaultService, addRequiredServices } from "@/servic
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 import { parseYear, parsePositiveInt } from "@/lib/validation";
 import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
 import { Stack } from "expo-router";
@@ -103,6 +105,8 @@ export default function AddVehicle() {
 
     if (step === 2) {
         return (
+            <View style={{ flex: 1 }}>
+            <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
             <ScrollView contentContainerStyle={styles.container}>
                 <Text style={styles.title}>Customize Service Schedule</Text>
                 <Text style={styles.subtitle}>
@@ -136,10 +140,13 @@ export default function AddVehicle() {
                     </Pressable>
                 </View>
             </ScrollView>
+            </View>
         );
     }
 
     return (
+        <View style={{ flex: 1 }}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <ScrollView contentContainerStyle={styles.container}>
             <Stack.Screen options={{ title: "Add Vehicle" }} />
             <Text style={styles.title}>Add Vehicle</Text>
@@ -202,6 +209,7 @@ export default function AddVehicle() {
                 <Text style={styles.buttonText}>Next: Service Schedule</Text>
             </Pressable>
         </ScrollView>
+        </View>
     );
 }
 
@@ -209,16 +217,16 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 20,
-        backgroundColor: "#ffffff",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 8,
+        color: "#FFFFFF",
     },
     subtitle: {
         fontSize: 14,
-        color: "#666",
+        color: "#CBD5E1",
         marginBottom: 20,
     },
     label: {
@@ -226,6 +234,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 8,
         marginTop: 8,
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,

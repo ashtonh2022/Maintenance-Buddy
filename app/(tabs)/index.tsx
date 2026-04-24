@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 import React, { useState } from "react";
 import {
   RefreshControl,
@@ -39,7 +40,7 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={["#b4a6ea", "#F8FAFC", "#bd9af1"]}
+        colors={[colors.darkNavy, colors.lightBlue]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFill}
@@ -61,7 +62,7 @@ export default function Dashboard() {
             router.push("/notifications" as any);
           }}
         >
-          <Ionicons name="notifications-outline" size={22} color="#1E293B" />
+          <Ionicons name="notifications-outline" size={22} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
@@ -226,7 +227,7 @@ export default function Dashboard() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F8FAFC" },
+  container: { flex: 1 },
 
   header: {
     paddingHorizontal: 20,
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#2563EB",
+    color: "#93C5FD",
     textTransform: "uppercase",
     letterSpacing: 1,
     marginBottom: 4,
@@ -247,18 +248,18 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#FFFFFF",
   },
   headerSubtitle: {
     marginTop: 6,
     fontSize: 14,
-    color: "#64748B",
+    color: "#CBD5E1",
   },
   headerIconButton: {
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.8)",
+    backgroundColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#0F172A",
@@ -333,12 +334,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#FFFFFF",
   },
   sectionMeta: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#94A3B8",
+    color: "#CBD5E1",
   },
 
   quickGrid: {
@@ -473,7 +474,7 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    color: "#666",
+    color: "#CBD5E1",
     fontSize: 16,
     marginTop: 6,
     marginBottom: 8,

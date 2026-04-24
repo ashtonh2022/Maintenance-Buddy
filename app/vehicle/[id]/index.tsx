@@ -8,6 +8,7 @@ import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../../constants/colors";
 
 export default function VehicleDetail() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -27,7 +28,7 @@ export default function VehicleDetail() {
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.container}>
             <LinearGradient
-                colors={["#b4a6ea", "#F8FAFC", "#bd9af1"]}
+                colors={[colors.darkNavy, colors.lightBlue]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={StyleSheet.absoluteFill}
@@ -161,7 +162,6 @@ export default function VehicleDetail() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F8FAFC",
     },
 
     content: {
@@ -203,14 +203,14 @@ const styles = StyleSheet.create({
     },
 
     backButton: {
-        backgroundColor: "rgba(255,255,255,0.8)",
+        backgroundColor: "rgba(255,255,255,0.15)",
         paddingVertical: 10,
         paddingHorizontal: 14,
         borderRadius: 14,
     },
 
     backButtonText: {
-        color: "#1E293B",
+        color: "#FFFFFF",
         fontWeight: "700",
     },
 
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 20,
         fontWeight: "800",
-        color: "#0F172A",
+        color: "#FFFFFF",
         marginTop: 22,
         marginBottom: 12,
     },
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     },
 
     emptyText: {
-        color: "#64748B",
+        color: "#CBD5E1",
         fontSize: 15,
         marginBottom: 10,
     },

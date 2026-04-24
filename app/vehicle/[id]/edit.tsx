@@ -6,6 +6,8 @@ import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import { parseYear, parsePositiveInt } from "@/lib/validation";
 import { Database } from "@/types/database.types";
 import { Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../../constants/colors";
 
 //variables
 export default function EditVehicle() {
@@ -84,6 +86,7 @@ export default function EditVehicle() {
 
     return (
         <View style={styles.container}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <Stack.Screen options={{ title: "Edit Vehicle" }} />
         <Text style={styles.title}>Edit Vehicle</Text>
 
@@ -147,12 +150,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 20,
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,
@@ -198,6 +201,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 8,
         marginTop: 8,
+        color: "#CBD5E1",
     },
     optionRow: {
         flexDirection: "row",

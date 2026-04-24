@@ -3,7 +3,7 @@ import { getTimelineEntryById } from "@/services/timeline";
 import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
 import { useLocalSearchParams, router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Platform, Text, TextInput, View, Pressable, StyleSheet } from "react-native";
+import { Alert, Button, Platform, Text, TextInput, View, Pressable, StyleSheet, ScrollView } from "react-native";
 import { useAddAttachment } from "@/hooks/useAttachment";
 import { formatDate, parsePositiveInt } from "@/lib/validation";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -11,6 +11,8 @@ import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { supabase } from "@/lib/supabase";
 import { Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function AddService() {
     const { id, appointmentId } = useLocalSearchParams<{ id: string; appointmentId?: string }>();
@@ -196,7 +198,9 @@ export default function AddService() {
     }
 
     return (
-        <View style={{ padding: 20 }}>
+        <View style={{ flex: 1 }}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+        <ScrollView contentContainerStyle={{ padding: 20 }}>
             <Stack.Screen options={{ title: "Add Service" }} />
             <Text style={styles.label}>Date</Text>
             <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
@@ -268,6 +272,7 @@ export default function AddService() {
         )}
 
         <Button title={isCompleting ? "Complete Appointment" : "Save Service Event"} onPress={handleSubmit} />
+        </ScrollView>
         </View>
     );
     
@@ -292,6 +297,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginTop: 12,
         marginBottom: 8,
+        color: "#CBD5E1",
     },
     tagRow: {
         flexDirection: "row",
