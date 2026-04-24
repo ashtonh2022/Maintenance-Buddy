@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     },
     card: {
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 10,
         padding: 16,
         backgroundColor: "#f9f9f9",
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     },
     fileCard: {
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 10,
         padding: 12,
         backgroundColor: "#f9f9f9",

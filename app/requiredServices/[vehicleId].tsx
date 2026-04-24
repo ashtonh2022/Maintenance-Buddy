@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     },
     dueText: {
         fontSize: 13,
-        color: "#666",
+        color: "#FFFFFF",
         marginTop: 8,
     },
 });

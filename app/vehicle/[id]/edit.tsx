@@ -93,6 +93,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Make"
+            placeholderTextColor="#94A3B8"
             value={make}
             onChangeText={setMake}
         />
@@ -100,6 +101,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Model"
+            placeholderTextColor="#94A3B8"
             value={model}
             onChangeText={setModel}
         />
@@ -107,6 +109,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Year"
+            placeholderTextColor="#94A3B8"
             value={year}
             onChangeText={setYear}
             keyboardType="numeric"
@@ -115,6 +118,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Mileage"
+            placeholderTextColor="#94A3B8"
             value={mileage}
             onChangeText={setMileage}
             keyboardType="numeric"
@@ -159,10 +163,11 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     button: {
         backgroundColor: "#2323FF",
@@ -190,7 +195,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2323FF",
     },
     optionText: {
-        color: "#000",
+        color: "#FFFFFF",
     },
     selectedOptionText: {
         color: "#fff",
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 8,
         marginTop: 8,
-        color: "#CBD5E1",
+        color: "#FFFFFF",
     },
     optionRow: {
         flexDirection: "row",
@@ -211,7 +216,7 @@ const styles = StyleSheet.create({
     },
     option: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         paddingVertical: 10,
         paddingHorizontal: 16,

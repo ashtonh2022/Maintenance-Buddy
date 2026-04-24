@@ -39,11 +39,11 @@ export default function AddAppointment() {
             <Text style={styles.title}>Add Appointment</Text>
 
             <Text style={styles.label}>Service Type</Text>
-            <TextInput style={styles.input} value={serviceType} onChangeText={setServiceType} />
+            <TextInput style={styles.input} placeholderTextColor="#94A3B8" value={serviceType} onChangeText={setServiceType} />
 
             <Text style={styles.label}>Date</Text>
             <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
-                <Text>{formatDate(date)}</Text>
+                <Text style={{ color: "#FFFFFF" }}>{formatDate(date)}</Text>
             </Pressable>
             {showDatePicker && (
                 <DateTimePicker
@@ -57,7 +57,7 @@ export default function AddAppointment() {
             )}
 
             <Text style={styles.label}>Mechanic Shop (Optional)</Text>
-            <TextInput style={styles.input} value={mechanicShop} onChangeText={setMechanicShop} />
+            <TextInput style={styles.input} placeholderTextColor="#94A3B8" value={mechanicShop} onChangeText={setMechanicShop} />
 
             <Pressable style={styles.button} onPress={handleAdd}>
                 <Text style={styles.buttonText}>Add Appointment</Text>
@@ -81,18 +81,19 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "600",
         marginBottom: 8,
-        color: "#CBD5E1",
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     dateButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,

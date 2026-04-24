@@ -204,7 +204,7 @@ export default function AddService() {
             <Stack.Screen options={{ title: "Add Service" }} />
             <Text style={styles.label}>Date</Text>
             <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
-                <Text>{formatDate(date)}</Text>
+                <Text style={{ color: "#FFFFFF" }}>{formatDate(date)}</Text>
             </Pressable>
             {showDatePicker && (
                 <DateTimePicker
@@ -216,10 +216,10 @@ export default function AddService() {
                     }}
                 />
             )}
-            <TextInput style={styles.input} placeholder="Mileage (optional)" value={mileageAtService} onChangeText={setMileage} keyboardType="numeric" />
-            <TextInput style={styles.input} placeholder="Service Type" value={serviceType} onChangeText={setServiceType} />
-            <TextInput style={styles.input} placeholder="Mechanic Shop (optional)" value={mechanicShop} onChangeText={setMechanicShop} />
-            <TextInput style={styles.input} placeholder="Description (optional)" value={description} onChangeText={setDescription} />
+            <TextInput style={styles.input} placeholder="Mileage (optional)" placeholderTextColor="#94A3B8" value={mileageAtService} onChangeText={setMileage} keyboardType="numeric" />
+            <TextInput style={styles.input} placeholder="Service Type" placeholderTextColor="#94A3B8" value={serviceType} onChangeText={setServiceType} />
+            <TextInput style={styles.input} placeholder="Mechanic Shop (optional)" placeholderTextColor="#94A3B8" value={mechanicShop} onChangeText={setMechanicShop} />
+            <TextInput style={styles.input} placeholder="Description (optional)" placeholderTextColor="#94A3B8" value={description} onChangeText={setDescription} />
 
             <Text style={styles.label}>Tags</Text>
             <View style={styles.tagRow}>
@@ -280,14 +280,15 @@ export default function AddService() {
 const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     dateButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
@@ -297,7 +298,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginTop: 12,
         marginBottom: 8,
-        color: "#CBD5E1",
+        color: "#FFFFFF",
     },
     tagRow: {
         flexDirection: "row",
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
     },
     tagButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         paddingVertical: 8,
         paddingHorizontal: 12,
@@ -317,7 +318,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2323FF",
     },
     tagButtonText: {
-        color: "#2323FF",
+        color: "#FFFFFF",
         fontWeight: "600",
     },
     tagButtonTextActive: {
