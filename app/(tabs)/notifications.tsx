@@ -1,208 +1,263 @@
-import { ActivityIndicator, Alert, ScrollView, Pressable, StyleSheet, Text, View } from "react-native";
-import { useMarkAllNotificationsAsRead, useMarkNotificationAsRead, useNotifications, useDeleteNotification } from "@/hooks/useNotifications";
-import { router } from "expo-router";
 import React from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors as appColors } from "../../constants/colors";
+
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  useMarkAllNotificationsAsRead,
+  useMarkNotificationAsRead,
+  useNotifications,
+} from "@/hooks/useNotifications";
 import { NotificationRow } from "@/types/types";
 
-export default function Notifications() {
-    const { session } = useAuth();
-    let userId = "";
-    if (session && session.user) {
-        userId = session.user.id;
+import { common } from "../../styles/common";
+import { colors, spacing } from "../../styles/themes";
+
+export default function NotificationsScreen() {
+  const { session } = useAuth();
+
+  let userId = "";
+  if (session?.user) {
+    userId = session.user.id;
+  }
+
+  const { data: notifications, error, isLoading } = useNotifications(userId);
+
+  const markOneAsRead = useMarkNotificationAsRead(userId);
+  const markAllAsRead = useMarkAllNotificationsAsRead(userId);
+
+  const unreadNotifications: NotificationRow[] =
+    notifications?.filter((item) => item.is_read === false) ?? [];
+
+  const earlierNotifications: NotificationRow[] =
+    notifications?.filter((item) => item.is_read === true) ?? [];
+
+  const handlePressNotification = async (notification: NotificationRow) => {
+    if (!notification.is_read) {
+      await markOneAsRead.mutateAsync(notification.id);
     }
 
-    const {data: notifications, error, isLoading} = useNotifications(userId)
+    router.push(`/vehicle/${notification.vehicle_id}` as any);
+  };
 
-    const markOneAsRead = useMarkNotificationAsRead(userId);
-    const markAllAsRead = useMarkAllNotificationsAsRead(userId);
+  const handleMarkAllAsRead = async () => {
+    await markAllAsRead.mutateAsync();
+  };
 
-    const deleteNotificationMutation = useDeleteNotification(userId);
+  return (
+    <View style={common.screen}>
+      <LinearGradient
+        colors={[appColors.darkNavy, appColors.lightBlue]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <View style={styles.header}>
+        <View style={styles.headerText}>
+          <Text style={styles.headerTitle}>Notifications</Text>
+          <Text style={styles.headerSubtitle}>
+            Stay updated on maintenance schedules and appointments.
+          </Text>
+        </View>
 
-    let unreadNotifications: NotificationRow[] = [];
-    let earlierNotifications: NotificationRow[] = [];
+        {!!notifications?.length && (
+          <Pressable style={styles.markAllButton} onPress={handleMarkAllAsRead}>
+            <Text style={styles.markAllButtonText}>Mark All Read</Text>
+          </Pressable>
+        )}
+      </View>
 
-    if (notifications) {
-        unreadNotifications = notifications.filter((item) => item.is_read === false);
-        earlierNotifications = notifications.filter((item) => item.is_read === true);
-    }
+      <ScrollView contentContainerStyle={styles.content}>
+        {isLoading && (
+          <View style={[common.card, styles.centerCard]}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={styles.helperText}>Loading notifications...</Text>
+          </View>
+        )}
 
-    const handlePressNotification = async (notification: any) => {
-        if (notification.is_read === false) {
-                await markOneAsRead.mutateAsync(notification.id);
-            }
-        router.push(`/vehicle/${notification.vehicle_id}`);
-    }
+        {!isLoading && error && (
+          <View style={[common.card, styles.centerCard]}>
+            <Ionicons
+              name="alert-circle-outline"
+              size={36}
+              color={colors.danger}
+            />
+            <Text style={styles.emptyTitle}>Could not load notifications</Text>
+            <Text style={styles.emptySubtitle}>Try again in a moment.</Text>
+          </View>
+        )}
 
-    const handleMarkAllAsRead = async () => {
-        await markAllAsRead.mutateAsync();
-    }
+        {!isLoading && !error && notifications?.length === 0 && (
+          <View style={[common.card, styles.centerCard]}>
+            <Ionicons
+              name="notifications-outline"
+              size={40}
+              color={colors.muted}
+            />
+            <Text style={styles.emptyTitle}>No notifications</Text>
+            <Text style={styles.emptySubtitle}>
+              You're all caught up. Important updates about your vehicles and
+              services will appear here.
+            </Text>
+          </View>
+        )}
 
-    return (
-        <ScrollView style={styles.container}>
-            <View style={styles.headerBox}>
-                <View>
-                    <Text style={styles.title}>Notifications</Text>
-                    <Text style={styles.sectionTitle}>
-                        Stay updated on maintenance schedules and appointments
-                    </Text>
+        {!isLoading && !error && unreadNotifications.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Unread</Text>
+
+            {unreadNotifications.map((item) => (
+              <Pressable
+                key={item.id}
+                style={[common.card, styles.notificationCard]}
+                onPress={() => handlePressNotification(item)}
+              >
+                <View style={styles.row}>
+                  <View style={styles.unreadDot} />
+                  <Text style={styles.typeText}>{item.type}</Text>
                 </View>
 
-                {notifications && notifications.length > 0 && (
-                    <Pressable
-                        style={styles.markAllButton}
-                        onPress={handleMarkAllAsRead}
-                    >
-                        <Text style={styles.markAllButtonText}>Mark All as Read</Text>
-                    </Pressable>
-                )}
-            </View>
+                <Text style={styles.message}>{item.message}</Text>
+                <Text style={styles.dateText}>Due: {item.scheduled_date}</Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
 
-            {isLoading && <ActivityIndicator size="large" />}
+        {!isLoading && !error && earlierNotifications.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Earlier</Text>
 
-            {error && (
-                <Text style={styles.text}>Could not load notifications.</Text>
-            )}
-
-            {!isLoading && !error && notifications?.length === 0 && (
-                <Text style={styles.text}>No unread notifications.</Text>
-            )}
-
-            {!isLoading && !error && unreadNotifications.length > 0 && (
-                <>
-                    <Text style={styles.listTitle}>Unread</Text>
-                    {unreadNotifications.map((item) => (
-                        <Pressable
-                            key={item.id}
-                            style={styles.card}
-                            onPress={() => handlePressNotification(item)}
-                        >
-                        <View style={styles.row}>
-                            <View style={styles.dot} />
-                            <Text style={styles.typeText}>{item.type}</Text>
-                        </View>
-
-                            <Text style={styles.message}>{item.message}</Text>
-                            <Text style={styles.dateText}>
-                                Due: {item.scheduled_date}
-                            </Text>
-                        </Pressable>
-                    ))}    
-                </>
-            )}
-            {!isLoading && !error && earlierNotifications.length > 0 && (
-                <>
-                    <Text style={styles.listTitle}>Earlier</Text>
-                    {earlierNotifications.map((item) => (
-                        <View key={item.id} style={styles.card}>
-                            <Pressable onPress={() => handlePressNotification(item)}>
-                                <Text style={styles.typeText}>{item.type}</Text>
-                                <Text style={styles.message}>{item.message}</Text>
-                                <Text style={styles.dateText}>
-                                    Due: {item.scheduled_date}
-                                </Text>
-                            </Pressable>
-                            <Pressable
-                                style={styles.deleteButton}
-                                onPress={() => deleteNotificationMutation.mutate(item.id)}
-                            >
-                            <Text style={styles.deleteButtonText}>Delete</Text>
-                            </Pressable>
-                        </View>
-                    ))}    
-                </>
-            )}
-        </ScrollView>
-    );
+            {earlierNotifications.map((item) => (
+              <Pressable
+                key={item.id}
+                style={[common.card, styles.notificationCard]}
+                onPress={() => handlePressNotification(item)}
+              >
+                <Text style={styles.typeText}>{item.type}</Text>
+                <Text style={styles.message}>{item.message}</Text>
+                <Text style={styles.dateText}>Due: {item.scheduled_date}</Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
-    },
-    text: {
-        color: "#666",
-        fontSize: 16,
-        textAlign: "center",
-        marginTop: 20,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: "600",
-        marginBottom: 6,
-    },
-    sectionTitle: {
-        fontSize: 14,
-        color: "#666",
-    },
-    headerBox: {
-        marginBottom: 20,
-    },
-    markAllButton: {
-        backgroundColor: "#2563eb",
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 8,
-        alignSelf: "flex-start",
-        marginTop: 10,
-    },
-    markAllButtonText: {
-        color: "#fff",
-        fontSize: 12,
-        fontWeight: "600",
-    },
-    listTitle: {
-        fontSize: 20,
-        fontWeight: "600",
-        marginTop: 12,
-        marginBottom: 10,
-    },
-    card: {
-        backgroundColor: "#f5f5f5",
-        borderRadius: 10,
-        padding: 14,
-        marginBottom: 12,
-    },
-    row: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 8,
-    },
-    dot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: "red",
-        marginRight: 8,
-    },
-    typeText: {
-        fontSize: 13,
-        fontWeight: "600",
-        color: "#444",
-    },
-    message: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 6,
-    },
-    dateText: {
-        fontSize: 14,
-        color: "#666",
-    },
-    deleteButton: {
-        marginTop: 10,
-        backgroundColor: "#d9534f",
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 8,
-        alignSelf: "flex-start",
-    },
-
-    deleteButtonText: {
-        color: "white",
-        fontWeight: "600",
-    },
+  header: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: 60,
+    paddingBottom: spacing.md,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: "#FFFFFF",
+  },
+  headerSubtitle: {
+    marginTop: 6,
+    fontSize: 14,
+    color: "#CBD5E1",
+    maxWidth: 220,
+  },
+  content: {
+    padding: spacing.lg,
+    paddingBottom: 120,
+  },
+  markAllButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignSelf: "center",
+    flexShrink: 0,
+  },
+  markAllButtonText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  centerCard: {
+    alignItems: "center",
+    padding: 28,
+  },
+  helperText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  emptyTitle: {
+    marginTop: 14,
+    fontSize: 20,
+    fontWeight: "800",
+    color: colors.text,
+  },
+  emptySubtitle: {
+    marginTop: 8,
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: "center",
+    lineHeight: 20,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    marginBottom: 12,
+  },
+  notificationCard: {
+    marginBottom: 12,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  unreadDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.danger,
+    marginRight: 8,
+  },
+  typeText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: colors.textSecondary,
+    textTransform: "capitalize",
+  },
+  message: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: colors.text,
+    marginBottom: 6,
+  },
+  dateText: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  headerText: {
+  flex: 1,
+  paddingRight: 10,
+  },
 });
-

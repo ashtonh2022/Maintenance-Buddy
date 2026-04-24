@@ -77,7 +77,7 @@ export default function ServiceIntervalEditor({
 const styles = StyleSheet.create({
     container: {
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     serviceName: {
         fontSize: 16,
         fontWeight: "600",
+        color: "#FFFFFF",
     },
     textDisabled: {
         color: "#999",
@@ -110,13 +111,13 @@ const styles = StyleSheet.create({
     },
     arrowButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 6,
         paddingVertical: 6,
         paddingHorizontal: 12,
     },
     arrowText: {
-        color: "#2323FF",
+        color: "#FFFFFF",
         fontWeight: "600",
         fontSize: 16,
     },
@@ -125,5 +126,6 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         minWidth: 100,
         textAlign: "center",
+        color: "#FFFFFF",
     },
 });

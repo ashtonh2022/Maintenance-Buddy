@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "scheme": "maintenancebuddyexpo",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -14,7 +13,6 @@
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.anonymous.maintenancebuddyexpo"
     },
@@ -36,10 +34,6 @@
       "expo-font",
       "expo-web-browser",
       "@react-native-community/datetimepicker"
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    }
+    ]
   }
 }

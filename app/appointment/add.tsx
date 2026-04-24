@@ -4,6 +4,9 @@ import { useAddAppointment } from "@/hooks/useTimeline";
 import { useLocalSearchParams, router } from "expo-router";
 import { formatDate } from "@/lib/validation";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function AddAppointment() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -31,14 +34,16 @@ export default function AddAppointment() {
 
     return (
         <View style={styles.container}>
+            <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+            <Stack.Screen options={{ title: "Add Appointment" }} />
             <Text style={styles.title}>Add Appointment</Text>
 
             <Text style={styles.label}>Service Type</Text>
-            <TextInput style={styles.input} value={serviceType} onChangeText={setServiceType} />
+            <TextInput style={styles.input} placeholderTextColor="#94A3B8" value={serviceType} onChangeText={setServiceType} />
 
             <Text style={styles.label}>Date</Text>
             <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
-                <Text>{formatDate(date)}</Text>
+                <Text style={{ color: "#FFFFFF" }}>{formatDate(date)}</Text>
             </Pressable>
             {showDatePicker && (
                 <DateTimePicker
@@ -52,7 +57,7 @@ export default function AddAppointment() {
             )}
 
             <Text style={styles.label}>Mechanic Shop (Optional)</Text>
-            <TextInput style={styles.input} value={mechanicShop} onChangeText={setMechanicShop} />
+            <TextInput style={styles.input} placeholderTextColor="#94A3B8" value={mechanicShop} onChangeText={setMechanicShop} />
 
             <Pressable style={styles.button} onPress={handleAdd}>
                 <Text style={styles.buttonText}>Add Appointment</Text>
@@ -65,28 +70,30 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 20,
+        color: "#FFFFFF",
     },
     label: {
         fontSize: 16,
         fontWeight: "600",
         marginBottom: 8,
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     dateButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,

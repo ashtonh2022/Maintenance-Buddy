@@ -1,10 +1,13 @@
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRequiredServices, useUpdateRequiredService } from "@/hooks/useRequiredServices";
 import { useServiceEvents } from "@/hooks/useTimeline";
 import { useVehicle } from "@/hooks/useVehicles";
 import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
+import { Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function RequiredServicesPage() {
     const { vehicleId } = useLocalSearchParams<{ vehicleId: string }>();
@@ -27,8 +30,10 @@ export default function RequiredServicesPage() {
     if (servicesLoading) return <ActivityIndicator style={styles.container} />;
 
     return (
+        <View style={{ flex: 1 }}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Required Services</Text>
+            <Stack.Screen options={{ title: "Required Services" }} />
             <Text style={styles.subtitle}>
                 Adjust intervals and enable or disable services
             </Text>
@@ -66,6 +71,7 @@ export default function RequiredServicesPage() {
                 );
             })}
         </ScrollView>
+        </View>
     );
 }
 
@@ -73,7 +79,6 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 20,
-        backgroundColor: "#fff",
     },
     title: {
         fontSize: 24,
@@ -82,17 +87,17 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 14,
-        color: "#666",
+        color: "#CBD5E1",
         marginBottom: 20,
     },
     emptyText: {
-        color: "#666",
+        color: "#CBD5E1",
         fontSize: 16,
         marginTop: 20,
     },
     dueText: {
         fontSize: 13,
-        color: "#666",
+        color: "#FFFFFF",
         marginTop: 8,
     },
 });

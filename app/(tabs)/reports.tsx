@@ -1,138 +1,270 @@
 import React from "react";
-import { ScrollView, View, Text, Pressable, StyleSheet } from "react-native";
-import { useExportPdfAllVehicles, useExportSummaryPdfVehicle, useExportVehicleFullZip } from "@/hooks/useReports";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors as appColors } from "../../constants/colors";
+
+import { common } from "../../styles/common";
+import { colors, spacing } from "../../styles/themes";
+
+import {
+  useExportPdfAllVehicles,
+  useExportSummaryPdfVehicle,
+  useExportVehicleFullZip,
+} from "@/hooks/useReports";
 import { useAuth } from "@/contexts/AuthContext";
 import { useVehicles } from "@/hooks/useVehicles";
-import { Alert } from "react-native";
 
-export default function Reports() {
-    const { session } = useAuth();
-    let userId = "";
-    if (session && session.user) {
-        userId = session.user.id;
-    }
-    const { data: vehicles, isLoading, error } = useVehicles();
+export default function ReportsScreen() {
+  const { session } = useAuth();
+  const userId = session?.user?.id ?? "";
 
-    const exportPdfAll = useExportPdfAllVehicles();
-    const exportPdfVehicle = useExportSummaryPdfVehicle();
+  const { data: vehicles, isLoading, error } = useVehicles();
 
-    const exportZipVehicle = useExportVehicleFullZip();
+  const exportPdfAll = useExportPdfAllVehicles();
+  const exportPdfVehicle = useExportSummaryPdfVehicle();
+  const exportZipVehicle = useExportVehicleFullZip();
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Reports</Text>
+  return (
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <View style={common.screen}>
+        <LinearGradient
+          colors={[appColors.darkNavy, appColors.lightBlue]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Reports</Text>
+            <Text style={styles.headerSubtitle}>
+              Export and review vehicle maintenance summaries.
+            </Text>
+          </View>
 
-            <View style={styles.box}>
-                <Text style={styles.boxTitle}>Summary Reports</Text>
+          <View style={[common.card, styles.reportCard]}>
+            <View
+              style={[styles.iconWrap, { backgroundColor: colors.primaryLight }]}
+            >
+              <Ionicons
+                name="document-text-outline"
+                size={22}
+                color={colors.primary}
+              />
+            </View>
 
-                <View style={styles.vehicleRow}>
-                    <Text style={styles.vehicleText}>All Vehicles</Text>
-                    <View style={styles.buttonRow}>
+            <View style={styles.reportInfo}>
+              <Text style={styles.reportTitle}>Maintenance Summary</Text>
+              <Text style={styles.reportDescription}>
+                Export one PDF summary for all vehicles.
+              </Text>
 
-                        <Pressable style={styles.formatButton} onPress={() => exportPdfAll.mutate(userId)}>
-                            <Text style={styles.buttonText}>PDF</Text>
-                        </Pressable>
-                    </View>
+              <TouchableOpacity
+                style={styles.formatButton}
+                onPress={() => exportPdfAll.mutate(userId)}
+              >
+                <Text style={styles.buttonText}>PDF</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Vehicle Reports</Text>
+            <Text style={styles.sectionMeta}>
+              {vehicles?.length ?? 0} vehicles
+            </Text>
+          </View>
+
+          {isLoading && (
+            <View style={[common.card, styles.messageCard]}>
+              <ActivityIndicator size="small" color={colors.primary} />
+              <Text style={styles.message}>Loading vehicles...</Text>
+            </View>
+          )}
+
+          {error && (
+            <View style={[common.card, styles.messageCard]}>
+              <Ionicons
+                name="alert-circle-outline"
+                size={22}
+                color={colors.danger}
+              />
+              <Text style={styles.message}>Failed to load vehicles.</Text>
+            </View>
+          )}
+
+          {!isLoading &&
+            !error &&
+            vehicles?.map((vehicle) => (
+              <View key={vehicle.id} style={[common.card, styles.vehicleCard]}>
+                <View
+                  style={[styles.iconWrap, { backgroundColor: "#EDE9FE" }]}
+                >
+                  <Ionicons
+                    name="car-sport-outline"
+                    size={22}
+                    color={colors.purple}
+                  />
                 </View>
 
-                {isLoading && <Text style={styles.message}>Loading vehicles...</Text>}
-                {error && <Text style={styles.message}>Failed to load vehicles.</Text>}
+                <View style={styles.reportInfo}>
+                  <Text style={styles.reportTitle}>
+                    {vehicle.year} {vehicle.make} {vehicle.model}
+                  </Text>
 
-                {!isLoading && !error && vehicles?.map((vehicle) => (
-                    <View key={vehicle.id} style={styles.vehicleRow}>
-                        <Text style={styles.vehicleText}>
-                            {vehicle.year} {vehicle.make} {vehicle.model}
-                        </Text>
-                        <View style={styles.buttonRow}>
+                  <Text style={styles.reportDescription}>
+                    Export a PDF summary or full export file.
+                  </Text>
 
-                            <Pressable style={styles.formatButton} onPress={() => exportPdfVehicle.mutate(vehicle.id)}>
-                                <Text style={styles.buttonText}>PDF</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                ))}
+                  <View style={styles.buttonRow}>
+                    <TouchableOpacity
+                      style={styles.formatButton}
+                      onPress={() => exportPdfVehicle.mutate(vehicle.id)}
+                    >
+                      <Text style={styles.buttonText}>PDF</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[styles.formatButton, styles.zipButton]}
+                      onPress={() => exportZipVehicle.mutate(vehicle.id)}
+                    >
+                      <Text style={styles.buttonText}>ZIP</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            ))}
+
+          {!isLoading && !error && !vehicles?.length && (
+            <View style={[common.card, styles.messageCard]}>
+              <Ionicons
+                name="document-outline"
+                size={24}
+                color={colors.muted}
+              />
+              <Text style={styles.message}>
+                No vehicles found. Add one first.
+              </Text>
             </View>
-
-            <View style={styles.box}>
-                <Text style={styles.boxTitle}>Full Export</Text>
-
-                {isLoading && <Text style={styles.message}>Loading vehicles...</Text>}
-                {error && <Text style={styles.message}>Failed to load vehicles.</Text>}
-
-                {!isLoading && !error && vehicles?.map((vehicle) => (
-                    <View key={vehicle.id} style={styles.vehicleRow}>
-                        <Text style={styles.vehicleText}>
-                            {vehicle.year} {vehicle.make} {vehicle.model}
-                        </Text>
-
-                        <View style={styles.buttonRow}>
-                            <Pressable style={styles.formatButton}onPress={() => exportZipVehicle.mutate(vehicle.id, {
-                                onError: (error: any) => {
-                                    Alert.alert("ZIP Error", error?.message || "ZIP export failed");
-                                },
-                                onSuccess: () => {
-                                    Alert.alert("Success", "ZIP export finished");
-                                },
-                            })}>
-                                <Text style={styles.buttonText}>ZIP</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                ))}
-            </View>
+          )}
         </ScrollView>
-    );
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        gap: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-    },
-    box: {
-        backgroundColor: "#fff",
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 10,
-        padding: 15,
-        gap: 12,
-    },
-    boxTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
-    vehicleRow: {
-        borderWidth: 1,
-        borderColor: "#eee",
-        borderRadius: 8,
-        padding: 10,
-        gap: 10,
-    },
-    vehicleText: {
-        fontSize: 16,
-        fontWeight: "500",
-    },
-    buttonRow: {
-        flexDirection: "row",
-        gap: 10,
-    },
-    formatButton: {
-        backgroundColor: "#333",
-        paddingVertical: 8,
-        paddingHorizontal: 14,
-        borderRadius: 6,
-    },
-    buttonText: {
-        color: "#fff",
-        fontWeight: "600",
-    },
-    message: {
-        fontSize: 14,
-        color: "#666",
-    },
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    paddingBottom: 140,
+  },
+  header: {
+    marginBottom: spacing.lg,
+  },
+  headerTitle: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#FFFFFF",
+  },
+  headerSubtitle: {
+    fontSize: 15,
+    color: "#CBD5E1",
+    marginTop: 6,
+    lineHeight: 22,
+  },
+  reportCard: {
+    flexDirection: "row",
+    gap: spacing.md,
+    alignItems: "flex-start",
+    marginBottom: spacing.xl,
+  },
+  iconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  reportInfo: {
+    flex: 1,
+  },
+  reportTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: colors.text,
+  },
+  reportDescription: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 6,
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+  formatButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignSelf: "flex-start",
+  },
+  zipButton: {
+    backgroundColor: colors.purple,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 13,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: spacing.md,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+  sectionMeta: {
+    fontSize: 14,
+    color: "#CBD5E1",
+  },
+  vehicleCard: {
+    flexDirection: "row",
+    gap: spacing.md,
+    alignItems: "flex-start",
+    marginBottom: spacing.md,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  messageCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    paddingVertical: 20,
+  },
+  message: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    flexShrink: 1,
+  },
 });
