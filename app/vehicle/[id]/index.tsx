@@ -23,6 +23,8 @@ export default function VehicleDetail() {
     
 
     return (
+        <>
+        <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.container}>
             <LinearGradient
                 colors={["#b4a6ea", "#F8FAFC", "#bd9af1"]}
@@ -162,6 +164,7 @@ export default function VehicleDetail() {
                 </Pressable>
             </ScrollView>
         </View>
+        </>
     );
 }
 
