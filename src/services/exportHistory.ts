@@ -1,6 +1,6 @@
 import { File, Paths } from "expo-file-system";
-import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
 import JSZip from "jszip";
 import { supabase } from "@/lib/supabase";
 import { VehicleRow, timelineEntryRow, AttachmentRow } from "@/types/types";
@@ -106,7 +106,7 @@ async function buildVehicleSummaryPdf(vehicle: VehicleWithTimeline) {
     return html;
 }
 
-//shares pdf file to user
+//saves pdf file to cache then opens share sheet
 async function saveAndSharePdf(fileName: string, html: string) {
     const { uri } = await Print.printToFileAsync({
         html: html,
@@ -116,16 +116,14 @@ async function saveAndSharePdf(fileName: string, html: string) {
     const outputFile = new File(Paths.cache, fileName);
     outputFile.write(pdfBytes);
 
-    const canShare = await Sharing.isAvailableAsync();
+    await shareFile(outputFile.uri, "application/pdf");
+}
 
-    if (!canShare) {
-        throw new Error("Sharing not available");
-    }
-
-    await Sharing.shareAsync(outputFile.uri, {
-        mimeType: "application/pdf",
-        dialogTitle: fileName,
-        UTI: "com.adobe.pdf",
+//opens share sheet - expo-sharing handles content URI conversion
+async function shareFile(fileUri: string, mimeType: string) {
+    await Sharing.shareAsync(fileUri, {
+        mimeType,
+        UTI: mimeType === "application/pdf" ? "com.adobe.pdf" : "public.zip-archive",
     });
 }
 
@@ -305,15 +303,5 @@ export async function exportVehicleFullZip(vehicleId: string) {
     const zipFile = new File(Paths.cache, zipFileName);
     zipFile.write(zipBytes);
 
-    const canShare = await Sharing.isAvailableAsync();
-
-    if (!canShare) {
-        throw new Error("Sharing not available");
-    }
-
-    await Sharing.shareAsync(zipFile.uri, {
-        mimeType: "application/zip",
-        dialogTitle: zipFileName,
-        UTI: "public.zip-archive",
-    });
+    await shareFile(zipFile.uri, "application/zip");
 }
