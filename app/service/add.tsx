@@ -3,7 +3,7 @@ import { getTimelineEntryById } from "@/services/timeline";
 import { deleteNotificationByVehicleAndDate } from "@/services/notifications";
 import { useLocalSearchParams, router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Platform, Text, TextInput, View, Pressable, StyleSheet } from "react-native";
+import { Alert, Button, Platform, Text, TextInput, View, Pressable, StyleSheet, ScrollView } from "react-native";
 import { useAddAttachment } from "@/hooks/useAttachment";
 import { formatDate, parsePositiveInt } from "@/lib/validation";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -196,6 +196,7 @@ export default function AddService() {
     }
 
     return (
+        <ScrollView>
         <View style={{ padding: 20 }}>
             <Stack.Screen options={{ title: "Add Service" }} />
             <Text style={styles.label}>Date</Text>
@@ -269,6 +270,7 @@ export default function AddService() {
 
         <Button title={isCompleting ? "Complete Appointment" : "Save Service Event"} onPress={handleSubmit} />
         </View>
+        </ScrollView>
     );
     
 }
