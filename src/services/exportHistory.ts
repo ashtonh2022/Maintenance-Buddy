@@ -1,7 +1,7 @@
-import { File, Paths, Directory } from "expo-file-system";
-import * as Sharing from "expo-sharing";
+import { File, Paths } from "expo-file-system";
 import * as Print from "expo-print";
-import { zip } from "react-native-zip-archive";
+import * as Sharing from "expo-sharing";
+import JSZip from "jszip";
 import { supabase } from "@/lib/supabase";
 import { VehicleRow, timelineEntryRow, AttachmentRow } from "@/types/types";
 
@@ -106,7 +106,7 @@ async function buildVehicleSummaryPdf(vehicle: VehicleWithTimeline) {
     return html;
 }
 
-//shares pdf file to user
+//saves pdf file to cache then opens share sheet
 async function saveAndSharePdf(fileName: string, html: string) {
     const { uri } = await Print.printToFileAsync({
         html: html,
@@ -116,16 +116,14 @@ async function saveAndSharePdf(fileName: string, html: string) {
     const outputFile = new File(Paths.cache, fileName);
     outputFile.write(pdfBytes);
 
-    const canShare = await Sharing.isAvailableAsync();
+    await shareFile(outputFile.uri, "application/pdf");
+}
 
-    if (!canShare) {
-        throw new Error("Sharing not available");
-    }
-
-    await Sharing.shareAsync(outputFile.uri, {
-        mimeType: "application/pdf",
-        dialogTitle: fileName,
-        UTI: "com.adobe.pdf",
+//opens share sheet - expo-sharing handles content URI conversion
+async function shareFile(fileUri: string, mimeType: string) {
+    await Sharing.shareAsync(fileUri, {
+        mimeType,
+        UTI: mimeType === "application/pdf" ? "com.adobe.pdf" : "public.zip-archive",
     });
 }
 
@@ -204,44 +202,6 @@ function getExtensionFromPath(path: string) {
     return "";
 }
 
-async function downloadAttachmentToFile(attachment: AttachmentRow, folder: Directory, index: number) {
-    const result = await supabase.storage
-        .from(ATTACHMENTS_BUCKET)
-        .download(attachment.file_path);
-
-    const data = result.data;
-    const error = result.error;
-
-    if (error) {
-        throw error;
-    }
-
-    if (!data) {
-        throw new Error("Attachment download returned no data.");
-    }
-
-    const arrayBuffer = await data.arrayBuffer();
-    const bytes = new Uint8Array(arrayBuffer);
-
-    let fileName = attachment.file_path.split("/").pop() ?? ("attachment-" + index);
-    fileName = makeSafeName(fileName);
-
-    if (!fileName.includes(".")) {
-        const extension = getExtensionFromPath(attachment.file_path);
-        fileName = fileName + extension;
-    }
-
-    const file = new File(folder, fileName);
-    file.write(bytes);
-
-    return {
-        originalPath: attachment.file_path,
-        localName: fileName,
-        localUri: file.uri,
-        fileType: attachment.file_type,
-        fileSize: attachment.file_size,
-    };
-}
 
 export async function exportVehicleFullZip(vehicleId: string) {
     const result = await supabase
@@ -263,35 +223,17 @@ export async function exportVehicleFullZip(vehicleId: string) {
         })[];
     };
 
-    const folderName =
-        vehicle.year + "-" + vehicle.make + "-" + vehicle.model + "-full-export";
-
-    const folderName2 = folderName.replace(/\s+/g, "-").toLowerCase();
-
-    const exportFolder = new Directory(Paths.cache, folderName2);
-    exportFolder.create({
-        idempotent: true,
-        intermediates: true,
-    });
-
-    const vehicleFile = new File(exportFolder, "vehicle.json");
-    const vehicleJson = JSON.stringify(vehicle, null, 2);
-    vehicleFile.write(vehicleJson);
-
     let services = vehicle.timeline_entries;
     if (!services) {
         services = [];
     }
 
-    const servicesFile = new File(exportFolder, "services.json");
-    const servicesJson = JSON.stringify(services, null, 2);
-    servicesFile.write(servicesJson);
+    const jszip = new JSZip();
 
-    const attachmentsFolder = new Directory(exportFolder, "attachments");
-    attachmentsFolder.create({
-        idempotent: true,
-        intermediates: true,
-    });
+    jszip.file("vehicle.json", JSON.stringify(vehicle, null, 2));
+    jszip.file("services.json", JSON.stringify(services, null, 2));
+
+    const attachmentsFolder = jszip.folder("attachments");
 
     const list: {
         serviceId: string;
@@ -299,7 +241,6 @@ export async function exportVehicleFullZip(vehicleId: string) {
         fileType: string;
         fileSize: number;
         localName?: string;
-        localUri?: string;
         downloadFailed?: boolean;
     }[] = [];
 
@@ -313,19 +254,32 @@ export async function exportVehicleFullZip(vehicleId: string) {
             const attachment = serviceAttachments[j];
 
             try {
-                const savedFile = await downloadAttachmentToFile(
-                    attachment,
-                    attachmentsFolder,
-                    attachmentIndex
-                );
+                const downloadResult = await supabase.storage
+                    .from(ATTACHMENTS_BUCKET)
+                    .download(attachment.file_path);
+
+                if (downloadResult.error || !downloadResult.data) {
+                    throw downloadResult.error ?? new Error("No data");
+                }
+
+                const arrayBuffer = await downloadResult.data.arrayBuffer();
+                const bytes = new Uint8Array(arrayBuffer);
+
+                let fileName = attachment.file_path.split("/").pop() ?? ("attachment-" + attachmentIndex);
+                fileName = makeSafeName(fileName);
+
+                if (!fileName.includes(".")) {
+                    fileName = fileName + getExtensionFromPath(attachment.file_path);
+                }
+
+                attachmentsFolder!.file(fileName, bytes);
 
                 list.push({
                     serviceId: service.id,
                     filePath: attachment.file_path,
                     fileType: attachment.file_type,
                     fileSize: attachment.file_size,
-                    localName: savedFile.localName,
-                    localUri: savedFile.localUri,
+                    localName: fileName,
                 });
             } catch {
                 list.push({
@@ -341,24 +295,13 @@ export async function exportVehicleFullZip(vehicleId: string) {
         }
     }
 
-    const attachmentsFile = new File(exportFolder, "attachments.json");
-    const attachmentsJson = JSON.stringify(list, null, 2);
-    attachmentsFile.write(attachmentsJson);
+    jszip.file("attachments.json", JSON.stringify(list, null, 2));
+
+    const zipBytes = await jszip.generateAsync({ type: "uint8array" });
 
     const zipFileName = makeZipFileName(vehicle);
-    const zipTarget = new File(Paths.cache, zipFileName);
+    const zipFile = new File(Paths.cache, zipFileName);
+    zipFile.write(zipBytes);
 
-    const zipPath = await zip(exportFolder.uri, zipTarget.uri);
-
-    const canShare = await Sharing.isAvailableAsync();
-
-    if (!canShare) {
-        throw new Error("Sharing not available");
-    }
-
-    await Sharing.shareAsync(zipPath, {
-        mimeType: "application/zip",
-        dialogTitle: zipFileName,
-        UTI: "public.zip-archive",
-    });
+    await shareFile(zipFile.uri, "application/zip");
 }
