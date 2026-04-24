@@ -41,3 +41,24 @@ create policy "Users can manage own attachments"
 -- Notifications: users can read/manage their own
 create policy "Users can manage own notifications"
   on notifications for all using (user_id = auth.uid());
+
+  -- Allow authenticated users to upload to the attachments bucket
+  create
+policy "Authenticated users can upload attachments"
+    on storage.objects for insert
+    to authenticated
+    with check (bucket_id = 'attachments');
+
+  -- Allow authenticated users to read their attachments
+  create
+policy "Authenticated users can read attachments"
+    on storage.objects for
+select
+    to authenticated using (bucket_id = 'attachments');
+
+-- Allow authenticated users to delete their attachments
+create
+policy "Authenticated users can delete attachments"
+    on storage.objects for delete
+to authenticated
+    using (bucket_id = 'attachments');
