@@ -3,6 +3,8 @@ import { useSignOut, useResetPassword } from "@/hooks/useAuth";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors as appColors } from "../../constants/colors";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -91,6 +93,12 @@ export default function SettingsScreen() {
 
   return (
     <View style={common.screen}>
+      <LinearGradient
+        colors={[appColors.darkNavy, appColors.lightBlue]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Settings</Text>
         <Text style={styles.headerSubtitle}>
@@ -103,8 +111,8 @@ export default function SettingsScreen() {
 
         <View style={[common.card, styles.settingCard]}>
           <View style={styles.leftRow}>
-            <View style={[styles.iconWrap, { backgroundColor: "#8cd7b2" }]}>
-              <Ionicons name="person-outline" size={20} color={colors.primary} />
+            <View style={[styles.iconWrap, { backgroundColor: colors.primary }]}>
+              <Ionicons name="person-outline" size={20} color="#FFFFFF" />
             </View>
             <View>
               <Text style={styles.settingText}>Email</Text>
@@ -238,19 +246,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: 60,
     paddingBottom: spacing.md,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "800",
-    color: colors.text,
+    color: "#FFFFFF",
   },
   headerSubtitle: {
     marginTop: 6,
     fontSize: 14,
-    color: colors.textSecondary,
+    color: "#CBD5E1",
   },
   content: {
     padding: spacing.lg,
@@ -259,7 +264,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: colors.muted,
+    color: "#CBD5E1",
     textTransform: "uppercase",
     marginBottom: 12,
     marginTop: 8,

@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors as appColors } from "../../constants/colors";
 
 import { common } from "../../styles/common";
 import { colors, spacing } from "../../styles/themes";
@@ -34,6 +36,12 @@ export default function ReportsScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <View style={common.screen}>
+        <LinearGradient
+          colors={[appColors.darkNavy, appColors.lightBlue]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
         <ScrollView
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
@@ -172,11 +180,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 26,
     fontWeight: "800",
-    color: colors.text,
+    color: "#FFFFFF",
   },
   headerSubtitle: {
     fontSize: 15,
-    color: colors.textSecondary,
+    color: "#CBD5E1",
     marginTop: 6,
     lineHeight: 22,
   },
@@ -232,11 +240,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: colors.text,
+    color: "#FFFFFF",
   },
   sectionMeta: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: "#CBD5E1",
   },
   vehicleCard: {
     flexDirection: "row",

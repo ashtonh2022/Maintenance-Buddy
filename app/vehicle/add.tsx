@@ -4,6 +4,8 @@ import { DEFAULT_SCHEDULES, DefaultService, addRequiredServices } from "@/servic
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 import { parseYear, parsePositiveInt } from "@/lib/validation";
 import ServiceIntervalEditor from "@/components/ServiceIntervalEditor";
 import { Stack } from "expo-router";
@@ -103,6 +105,8 @@ export default function AddVehicle() {
 
     if (step === 2) {
         return (
+            <View style={{ flex: 1 }}>
+            <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
             <ScrollView contentContainerStyle={styles.container}>
                 <Text style={styles.title}>Customize Service Schedule</Text>
                 <Text style={styles.subtitle}>
@@ -115,7 +119,6 @@ export default function AddVehicle() {
                         serviceName={service.service_name}
                         intervalMiles={service.interval_miles}
                         onIntervalChange={(newInterval) => adjustInterval(index, newInterval - service.interval_miles)}
-                        onRemove={() => removeService(index)}
                     >
                         <Pressable
                             style={styles.skipRow}
@@ -136,10 +139,13 @@ export default function AddVehicle() {
                     </Pressable>
                 </View>
             </ScrollView>
+            </View>
         );
     }
 
     return (
+        <View style={{ flex: 1 }}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <ScrollView contentContainerStyle={styles.container}>
             <Stack.Screen options={{ title: "Add Vehicle" }} />
             <Text style={styles.title}>Add Vehicle</Text>
@@ -147,6 +153,7 @@ export default function AddVehicle() {
             <TextInput
                 style={styles.input}
                 placeholder="Make"
+                placeholderTextColor="#94A3B8"
                 value={make}
                 onChangeText={setMake}
             />
@@ -154,6 +161,7 @@ export default function AddVehicle() {
             <TextInput
                 style={styles.input}
                 placeholder="Model"
+                placeholderTextColor="#94A3B8"
                 value={model}
                 onChangeText={setModel}
             />
@@ -161,6 +169,7 @@ export default function AddVehicle() {
             <TextInput
                 style={styles.input}
                 placeholder="Year"
+                placeholderTextColor="#94A3B8"
                 value={year}
                 onChangeText={setYear}
                 keyboardType="numeric"
@@ -169,6 +178,7 @@ export default function AddVehicle() {
             <TextInput
                 style={styles.input}
                 placeholder="Current Mileage"
+                placeholderTextColor="#94A3B8"
                 value={mileage}
                 onChangeText={setMileage}
                 keyboardType="numeric"
@@ -193,6 +203,7 @@ export default function AddVehicle() {
             <TextInput
                 style={styles.input}
                 placeholder="e.g. 12000"
+                placeholderTextColor="#94A3B8"
                 value={mileageRate}
                 onChangeText={setMileageRate}
                 keyboardType="numeric"
@@ -202,6 +213,7 @@ export default function AddVehicle() {
                 <Text style={styles.buttonText}>Next: Service Schedule</Text>
             </Pressable>
         </ScrollView>
+        </View>
     );
 }
 
@@ -209,16 +221,16 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 20,
-        backgroundColor: "#ffffff",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 8,
+        color: "#FFFFFF",
     },
     subtitle: {
         fontSize: 14,
-        color: "#666",
+        color: "#CBD5E1",
         marginBottom: 20,
     },
     label: {
@@ -226,13 +238,15 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 8,
         marginTop: 8,
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     optionRow: {
         flexDirection: "row",
@@ -242,7 +256,7 @@ const styles = StyleSheet.create({
     },
     option: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         paddingVertical: 10,
         paddingHorizontal: 16,
@@ -251,7 +265,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2323FF",
     },
     optionText: {
-        color: "#000",
+        color: "#FFFFFF",
     },
     selectedOptionText: {
         color: "#fff",
@@ -267,7 +281,7 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderWidth: 2,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 4,
     },
     checkboxChecked: {
@@ -275,7 +289,7 @@ const styles = StyleSheet.create({
     },
     skipText: {
         fontSize: 14,
-        color: "#666",
+        color: "#CBD5E1",
     },
     buttonRow: {
         flexDirection: "row",
@@ -285,13 +299,13 @@ const styles = StyleSheet.create({
     backButton: {
         flex: 1,
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         padding: 12,
         borderRadius: 8,
         alignItems: "center",
     },
     backButtonText: {
-        color: "#2323FF",
+        color: "#FFFFFF",
         fontWeight: "600",
     },
     button: {

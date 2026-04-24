@@ -4,6 +4,8 @@ import { useLocalSearchParams } from "expo-router";
 import * as Linking from "expo-linking";
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 function isImage(fileType?: string | null) {
     if (!fileType) {
@@ -60,6 +62,8 @@ export default function ServiceDetail() {
     }
 
     return (
+        <View style={{ flex: 1 }}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>{entry.service_type}</Text>
 
@@ -119,13 +123,13 @@ export default function ServiceDetail() {
                 );
             })}
         </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: "#fff",
         flexGrow: 1,
     },
     center: {
@@ -137,10 +141,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 20,
+        color: "#FFFFFF",
     },
     card: {
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 10,
         padding: 16,
         backgroundColor: "#f9f9f9",
@@ -161,9 +166,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "600",
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     emptyText: {
-        color: "#666",
+        color: "#CBD5E1",
     },
     attachmentCard: {
         marginBottom: 16,
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
     },
     fileCard: {
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 10,
         padding: 12,
         backgroundColor: "#f9f9f9",

@@ -12,6 +12,8 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -48,6 +50,7 @@ export default function Login() {
       style={styles.screen}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
+      <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
       <View style={styles.container}>
         <View style={styles.logoWrap}>
           <Ionicons name="car-sport" size={34} color="#FFFFFF" />
@@ -132,7 +135,6 @@ export default function Login() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
   },
   container: {
     flex: 1,
@@ -152,12 +154,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#FFFFFF",
     textAlign: "center",
   },
   subtitle: {
     fontSize: 15,
-    color: "#64748B",
+    color: "#CBD5E1",
     textAlign: "center",
     marginTop: 8,
     marginBottom: 28,

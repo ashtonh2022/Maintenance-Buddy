@@ -2,6 +2,8 @@ import { supabase } from "@/lib/supabase";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function ResetPassword() {
     const [email, setEmail] = useState<string>("");
@@ -32,6 +34,7 @@ export default function ResetPassword() {
 
     return (
         <View style={styles.container}>
+            <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
             <Text style={styles.title}>Reset Password</Text>
             <Text style={styles.subtitle}>
                 Enter your email and we'll send you a password reset link.
@@ -40,6 +43,7 @@ export default function ResetPassword() {
         <TextInput
             style={styles.input}
             placeholder="Email"
+            placeholderTextColor="#94A3B8"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -60,25 +64,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
         justifyContent: "center",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     subtitle: {
         fontSize: 14,
-        color: "#000000",
+        color: "#CBD5E1",
         marginBottom: 20,
     },
     input: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     button: {
         backgroundColor: "#2323FF",

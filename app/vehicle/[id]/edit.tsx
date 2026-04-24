@@ -6,6 +6,8 @@ import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import { parseYear, parsePositiveInt } from "@/lib/validation";
 import { Database } from "@/types/database.types";
 import { Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../../constants/colors";
 
 //variables
 export default function EditVehicle() {
@@ -82,12 +84,14 @@ export default function EditVehicle() {
 
     return (
         <View style={styles.container}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
         <Stack.Screen options={{ title: "Edit Vehicle" }} />
         <Text style={styles.title}>Edit Vehicle</Text>
 
         <TextInput
             style={styles.input}
             placeholder="Make"
+            placeholderTextColor="#94A3B8"
             value={make}
             onChangeText={setMake}
         />
@@ -95,6 +99,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Model"
+            placeholderTextColor="#94A3B8"
             value={model}
             onChangeText={setModel}
         />
@@ -102,6 +107,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Year"
+            placeholderTextColor="#94A3B8"
             value={year}
             onChangeText={setYear}
             keyboardType="numeric"
@@ -110,6 +116,7 @@ export default function EditVehicle() {
         <TextInput
             style={styles.input}
             placeholder="Mileage"
+            placeholderTextColor="#94A3B8"
             value={mileage}
             onChangeText={setMileage}
             keyboardType="numeric"
@@ -145,19 +152,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
     },
     title: {
         fontSize: 24,
         fontWeight: "600",
         marginBottom: 20,
+        color: "#FFFFFF",
     },
     input: {
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     button: {
         backgroundColor: "#2323FF",
@@ -185,7 +193,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2323FF",
     },
     optionText: {
-        color: "#000",
+        color: "#FFFFFF",
     },
     selectedOptionText: {
         color: "#fff",
@@ -196,6 +204,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 8,
         marginTop: 8,
+        color: "#FFFFFF",
     },
     optionRow: {
         flexDirection: "row",
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
     },
     option: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         paddingVertical: 10,
         paddingHorizontal: 16,

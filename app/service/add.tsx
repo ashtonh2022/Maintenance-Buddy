@@ -11,6 +11,8 @@ import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { supabase } from "@/lib/supabase";
 import { Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../../constants/colors";
 
 export default function AddService() {
     const { id, appointmentId } = useLocalSearchParams<{ id: string; appointmentId?: string }>();
@@ -197,11 +199,13 @@ export default function AddService() {
 
     return (
         <ScrollView>
-        <View style={{ padding: 20 }}>
+        <View style={{ flex: 1 }}>
+        <LinearGradient colors={[colors.darkNavy, colors.lightBlue]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+        <ScrollView contentContainerStyle={{ padding: 20 }}>
             <Stack.Screen options={{ title: "Add Service" }} />
             <Text style={styles.label}>Date</Text>
             <Pressable style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
-                <Text>{formatDate(date)}</Text>
+                <Text style={{ color: "#FFFFFF" }}>{formatDate(date)}</Text>
             </Pressable>
             {showDatePicker && (
                 <DateTimePicker
@@ -213,10 +217,10 @@ export default function AddService() {
                     }}
                 />
             )}
-            <TextInput style={styles.input} placeholder="Mileage (optional)" value={mileageAtService} onChangeText={setMileage} keyboardType="numeric" />
-            <TextInput style={styles.input} placeholder="Service Type" value={serviceType} onChangeText={setServiceType} />
-            <TextInput style={styles.input} placeholder="Mechanic Shop (optional)" value={mechanicShop} onChangeText={setMechanicShop} />
-            <TextInput style={styles.input} placeholder="Description (optional)" value={description} onChangeText={setDescription} />
+            <TextInput style={styles.input} placeholder="Mileage (optional)" placeholderTextColor="#94A3B8" value={mileageAtService} onChangeText={setMileage} keyboardType="numeric" />
+            <TextInput style={styles.input} placeholder="Service Type" placeholderTextColor="#94A3B8" value={serviceType} onChangeText={setServiceType} />
+            <TextInput style={styles.input} placeholder="Mechanic Shop (optional)" placeholderTextColor="#94A3B8" value={mechanicShop} onChangeText={setMechanicShop} />
+            <TextInput style={styles.input} placeholder="Description (optional)" placeholderTextColor="#94A3B8" value={description} onChangeText={setDescription} />
 
             <Text style={styles.label}>Tags</Text>
             <View style={styles.tagRow}>
@@ -269,6 +273,7 @@ export default function AddService() {
         )}
 
         <Button title={isCompleting ? "Complete Appointment" : "Save Service Event"} onPress={handleSubmit} />
+        </ScrollView>
         </View>
         </ScrollView>
     );
@@ -277,14 +282,15 @@ export default function AddService() {
 const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.3)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+        color: "#FFFFFF",
     },
     dateButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
@@ -294,6 +300,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginTop: 12,
         marginBottom: 8,
+        color: "#FFFFFF",
     },
     tagRow: {
         flexDirection: "row",
@@ -302,7 +309,7 @@ const styles = StyleSheet.create({
     },
     tagButton: {
         borderWidth: 1,
-        borderColor: "#2323FF",
+        borderColor: "rgba(255,255,255,0.5)",
         borderRadius: 8,
         paddingVertical: 8,
         paddingHorizontal: 12,
@@ -313,7 +320,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2323FF",
     },
     tagButtonText: {
-        color: "#2323FF",
+        color: "#FFFFFF",
         fontWeight: "600",
     },
     tagButtonTextActive: {
